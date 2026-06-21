@@ -1,0 +1,1 @@
+# File ini berfungsi agar folder bin tetap masuk ke repository git meskipun isinya (file .exe) diabaikan oleh .gitignore
