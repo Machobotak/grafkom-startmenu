@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/Ayub/Project-Ambisius/grafkom-stratmenu",
-      "program": "d:/Ayub/Project-Ambisius/grafkom-stratmenu/build/Debug/outDebug",
+      "cwd": "d:/Ayub/Project-Ambisius/grafkom-startmenu",
+      "program": "d:/Ayub/Project-Ambisius/grafkom-startmenu/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
