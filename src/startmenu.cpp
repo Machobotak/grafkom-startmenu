@@ -42,7 +42,10 @@ void drawStartMenu()
     setfillstyle(SOLID_FILL, BLUE);
     bar(menuX, menuY, menuX + menuWidth, menuY + headerHeight);
     
+    int oldBk = getbkcolor(); // Simpan background lama
+
     if (animProgress > 0.2f) {
+        setbkcolor(BLUE); // Samakan background teks dengan header
         setcolor(WHITE);
         settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
         outtextxy(menuX + 60, menuY + 20, "Administrator");
@@ -67,11 +70,13 @@ void drawStartMenu()
     settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 1);
     if (animProgress > 0.8f) {
         // Teks Footer
+        setbkcolor(BLUE);
         setcolor(WHITE);
         outtextxy(menuX + 20, menuY + currentHeight - 30, "Log Off");
         outtextxy(menuX + 180, menuY + currentHeight - 30, "Turn Off Computer");
 
         // Menu Kiri
+        setbkcolor(WHITE); // Samakan background teks dengan kotak putih
         setcolor(BLACK);
         outtextxy(menuX + 15, menuY + headerHeight + 20, "Internet Explorer");
         outtextxy(menuX + 15, menuY + headerHeight + 50, "Outlook Express");
@@ -96,6 +101,7 @@ void drawStartMenu()
         }
 
         // Menu Kanan
+        setbkcolor(LIGHTBLUE); // Samakan background teks dengan kotak biru muda
         setcolor(WHITE);
         outtextxy(menuX + leftColWidth + 15, menuY + headerHeight + 20, "My Documents");
         outtextxy(menuX + leftColWidth + 15, menuY + headerHeight + 50, "My Recent Documents");
@@ -107,6 +113,8 @@ void drawStartMenu()
         outtextxy(menuX + leftColWidth + 15, menuY + headerHeight + 210, "Connect To");
         outtextxy(menuX + leftColWidth + 15, menuY + headerHeight + 240, "Printers and Faxes");
     }
+
+    setbkcolor(oldBk); // Kembalikan ke background awal
 
     // Animasi Pop-up menu (All Programs)
     if (isHoveringPrograms) {
@@ -139,6 +147,7 @@ void drawStartMenu()
 
         // Isi pop-up menu jika animasi hampir selesai
         if (popupAnimProgress > 0.8f) {
+            setbkcolor(WHITE); // Set background teks menjadi putih untuk pop-up
             setcolor(BLACK);
             settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 1);
             outtextxy(popupX + 15, popupY + 20, "Accessories");
@@ -149,6 +158,7 @@ void drawStartMenu()
             outtextxy(popupX + 15, popupY + 170, "Outlook Express");
             outtextxy(popupX + 15, popupY + 200, "Remote Assistance");
             outtextxy(popupX + 15, popupY + 230, "Windows Media Player");
+            setbkcolor(oldBk); // Kembalikan
         }
     }
 }
