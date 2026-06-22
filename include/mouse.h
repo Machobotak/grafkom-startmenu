@@ -2,5 +2,6 @@
 #define MOUSE_H
 
 void handleMouse();
+void handleKeyboard();
 
 #endif

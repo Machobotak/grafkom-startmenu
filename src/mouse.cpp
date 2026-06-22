@@ -2,6 +2,9 @@
 #include "../include/mouse.h"
 #include "../include/startmenu.h"
 
+#define VK_LWIN 91
+#define VK_RWIN 92
+
 void handleMouse()
 {
     if(ismouseclick(WM_LBUTTONDOWN))
@@ -13,5 +16,17 @@ void handleMouse()
             toggleStartMenu();
         }
     }
-    
+}
+
+void handleKeyboard()
+{
+    if(kbhit())
+    {
+        int key = getch();
+        // Windows key (left or right)
+        if(key == VK_LWIN || key == VK_RWIN)
+        {
+            toggleStartMenu();
+        }
+    }
 }
