@@ -4,7 +4,6 @@
 #include "../include/desktop.h"
 #include "../include/taskbar.h"
 #include "../include/startmenu.h"
-#include "../include/mouse.h"
 
 int main()
 {
@@ -17,7 +16,6 @@ int main()
     while(true)
     {
         cleardevice();
-        handleMouse();
 
         drawDesktop();
         drawTaskbar();
