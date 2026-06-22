@@ -2,17 +2,25 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: g++.exe build active file",
+            "label": "Build Start Menu",
+            "type": "shell",
             "command": "C:\\MinGW\\bin\\g++.exe",
             "args": [
-                "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\src\\*.cpp",
+
+                "${workspaceFolder}\\src\\main.cpp",
+                "${workspaceFolder}\\src\\desktop.cpp",
+                "${workspaceFolder}\\src\\taskbar.cpp",
+                "${workspaceFolder}\\src\\startmenu.cpp",
+                "${workspaceFolder}\\src\\mouse.cpp",
+                "${workspaceFolder}\\src\\utils.cpp",
+
                 "-I",
                 "${workspaceFolder}\\include",
+
                 "-o",
                 "${workspaceFolder}\\bin\\app.exe",
+
                 "-lbgi",
                 "-lgdi32",
                 "-lcomdlg32",
@@ -23,14 +31,13 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "compiler: C:\\MinGW\\bin\\g++.exe"
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ]
 }
