@@ -4,31 +4,10 @@
         {
             "label": "Build Start Menu",
             "type": "shell",
-            "command": "C:\\MinGW\\bin\\g++.exe",
+            "command": "cmd",
             "args": [
-                "-g",
-
-                // "${workspaceFolder}\\src\\main.cpp",
-                "${workspaceFolder}\\src\\main.cpp",
-                "${workspaceFolder}\\src\\desktop.cpp",
-                "${workspaceFolder}\\src\\taskbar.cpp",
-                "${workspaceFolder}\\src\\startmenu.cpp",
-                "${workspaceFolder}\\src\\mouse.cpp",
-                "${workspaceFolder}\\src\\utils.cpp", 
-                "${workspaceFolder}\\src\\clock.cpp", 
-
-                "-I",
-                "${workspaceFolder}\\include",
-
-                "-o",
-                "${workspaceFolder}\\bin\\app.exe",
-
-                "-lbgi",
-                "-lgdi32",
-                "-lcomdlg32",
-                "-luuid",
-                "-loleaut32",
-                "-lole32"
+                "/c",
+                "C:\\MinGW\\bin\\g++.exe -g src\\*.cpp -I include -o bin\\app.exe -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
