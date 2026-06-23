@@ -1,5 +1,6 @@
 #include <iostream>
 #include <graphics.h>
+#include <stdlib.h> // for malloc, free
 
 #include "../include/desktop.h"
 #include "../include/taskbar.h"
@@ -21,11 +22,30 @@ int main()
 
     std::cout << "Window dibuat\n";
 
-    // Initial full redraw
+    // Gambar desktop sekali dan simpan ke buffer agar cepat saat redraw
     cleardevice();
     drawDesktop();
+    
+    unsigned int bgSize = imagesize(0, 0, getmaxx(), getmaxy());
+    void* bgImage = malloc(bgSize);
+    if (bgImage) {
+        getimage(0, 0, getmaxx(), getmaxy(), bgImage);
+    }
+
+    int page = 0;
+
+    // Initial full redraw
+    setactivepage(1 - page);
+    if (bgImage) {
+        putimage(0, 0, bgImage, COPY_PUT);
+    } else {
+        cleardevice();
+        drawDesktop();
+    }
     drawTaskbar();
     drawStartMenu();
+    setvisualpage(1 - page);
+    page = 1 - page;
 
     while(true)
     {
@@ -53,46 +73,33 @@ int main()
         // Tentukan apa yang perlu di-redraw
         needsMenuRedraw = mouseAction || keyAction || isAnimating || hoverChanged || animationJustFinished;
         needsClockRedraw = timeChanged;
-        needsFullRedraw = needsMenuRedraw;
         
-        // PARTIAL REDRAW: Hanya clear dan redraw area yang berubah
+        // Dengan double buffering, jika ada bagian yang perlu di-redraw, kita redraw semua
+        needsFullRedraw = needsMenuRedraw || needsClockRedraw;
+        
         if (needsFullRedraw) {
-            int menuWidth = 350;
-            int targetHeight = 450;
-            int taskbarHeight = 50;
-            int startY = getmaxy() - taskbarHeight;
+            setactivepage(1 - page);
             
-            // Jika animasi baru saja selesai, clear seluruh area menu untuk cleanup
-            if (animationJustFinished) {
-                setfillstyle(SOLID_FILL, BLUE);
-                bar(0, startY - targetHeight, menuWidth, startY);
+            // Bersihkan layar dengan me-restore desktop (tanpa panel biru sisa)
+            if (bgImage) {
+                putimage(0, 0, bgImage, COPY_PUT);
             } else {
-                // Saat animasi berjalan, hanya clear area yang di-animate
-                int currentMenuHeight = (int)(targetHeight * currentAnimProgress);
-                int menuY = startY - currentMenuHeight;
-                setfillstyle(SOLID_FILL, BLUE);
-                bar(0, menuY, menuWidth, startY);
+                cleardevice();
+                drawDesktop();
             }
             
-            // Clear taskbar area (seluruh width)
-            setfillstyle(SOLID_FILL, DARKGRAY);
-            bar(0, startY, getmaxx(), getmaxy());
-            
-            // Redraw hanya bagian yang di-clear
             drawTaskbar();
             drawStartMenu();
-        } else if (needsClockRedraw) {
-            // Hanya redraw jam di taskbar
-            int taskbarY = getmaxy() - 50;
-            // Clear area jam saja
-            setfillstyle(SOLID_FILL, DARKGRAY);
-            bar(getmaxx() - 100, taskbarY, getmaxx(), getmaxy());
-            // Redraw jam
-            drawClock();
+            
+            setvisualpage(1 - page);
+            page = 1 - page;
         }
         
         delay(16); // ~60 FPS
     }
 
+    if (bgImage) {
+        free(bgImage);
+    }
     return 0;
 }
