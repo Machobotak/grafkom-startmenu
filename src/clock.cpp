@@ -3,6 +3,22 @@
 #include <stdio.h>
 #include "../include/clock.h"
 
+static int lastDisplayedHour = -1;
+static int lastDisplayedMinute = -1;
+
+bool isTimeChanged()
+{
+    time_t now = time(NULL);
+    tm *t = localtime(&now);
+
+    if (t->tm_hour != lastDisplayedHour || t->tm_min != lastDisplayedMinute) {
+        lastDisplayedHour = t->tm_hour;
+        lastDisplayedMinute = t->tm_min;
+        return true;
+    }
+    return false;
+}
+
 void drawClock()
 {
     time_t now = time(NULL);

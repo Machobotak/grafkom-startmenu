@@ -2,5 +2,6 @@
 #define CLOCK_H
 
 void drawClock();
+bool isTimeChanged();
 
 #endif
