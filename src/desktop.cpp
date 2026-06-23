@@ -3,28 +3,33 @@
 
 void drawDesktop()
 {
-    readimagefile("../assets/wallpaper.bmp",
+    // Fallback background color (biru)
+    setfillstyle(SOLID_FILL, BLUE);
+    bar(0, 0, getmaxx(), getmaxy());
+    
+    // Coba load wallpaper jika ada
+    readimagefile("assets/wallpaper.bmp",
                   0, 0,
                   getmaxx(), getmaxy());
 
     setcolor(WHITE);
 
-    readimagefile("../assets/browser.bmp",
+    readimagefile("assets/browser.bmp",
                   20, 20,
                   80, 80);
     outtextxy(25, 90, "Browser");
 
-    readimagefile("../assets/folder.bmp",
+    readimagefile("assets/folder.bmp",
                   20, 130,
                   80, 190);
     outtextxy(30, 200, "Folder");
 
-    readimagefile("../assets/settings.bmp",
+    readimagefile("assets/settings.bmp",
                   20, 240,
                   80, 300);
     outtextxy(25, 310, "Settings");
 
-    readimagefile("../assets/profile.bmp",
+    readimagefile("assets/profile.bmp",
                   20, 350,
                   80, 410);
     outtextxy(30, 420, "Profile");

@@ -6,6 +6,9 @@
 static float animProgress = 0.0f;
 static float popupAnimProgress = 0.0f;
 static bool isHoveringPrograms = false;
+static bool lastHoveringPrograms = false;
+static int lastMouseX = -1;
+static int lastMouseY = -1;
 
 void drawStartMenu()
 {
@@ -116,6 +119,11 @@ void drawStartMenu()
 
     setbkcolor(oldBk); // Kembalikan ke background awal
 
+    // Update last hover state untuk deteksi perubahan
+    lastHoveringPrograms = isHoveringPrograms;
+    lastMouseX = mx;
+    lastMouseY = my;
+
     // Animasi Pop-up menu (All Programs)
     if (isHoveringPrograms) {
         if (popupAnimProgress < 1.0f) popupAnimProgress += animSpeed * 1.5f; // Pop-up lebih cepat
@@ -166,4 +174,23 @@ void drawStartMenu()
 void toggleStartMenu()
 {
     startMenuOpen = !startMenuOpen;
+}
+
+float getAnimProgress()
+{
+    return animProgress;
+}
+
+bool isHoveringProgramsChanged()
+{
+    int mx = mousex();
+    int my = mousey();
+    
+    // Check if mouse moved
+    bool mouseMoved = (mx != lastMouseX || my != lastMouseY);
+    
+    // Check if hover state changed
+    bool hoverChanged = (isHoveringPrograms != lastHoveringPrograms);
+    
+    return mouseMoved || hoverChanged || popupAnimProgress > 0.0f;
 }

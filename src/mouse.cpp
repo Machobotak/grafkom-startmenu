@@ -1,11 +1,12 @@
 #include <graphics.h>
 #include "../include/mouse.h"
 #include "../include/startmenu.h"
+#include "../include/utils.h"
 
 #define VK_LWIN 91
 #define VK_RWIN 92
 
-void handleMouse()
+bool handleMouse()
 {
     if(ismouseclick(WM_LBUTTONDOWN))
     {
@@ -14,11 +15,13 @@ void handleMouse()
         if(x >= 10 && x <= 80 && y >= getmaxy() - 40 && y <= getmaxy() - 10)
         {
             toggleStartMenu();
+            return true;
         }
     }
+    return false;
 }
 
-void handleKeyboard()
+bool handleKeyboard()
 {
     if(kbhit())
     {
@@ -27,6 +30,8 @@ void handleKeyboard()
         if(key == VK_LWIN || key == VK_RWIN)
         {
             toggleStartMenu();
+            return true;
         }
     }
+    return false;
 }

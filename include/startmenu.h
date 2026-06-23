@@ -3,5 +3,7 @@
 
 void drawStartMenu();
 void toggleStartMenu();
+float getAnimProgress();
+bool isHoveringProgramsChanged();
 
 #endif
