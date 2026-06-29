@@ -47,7 +47,7 @@ int main()
     setvisualpage(1 - page);
     page = 1 - page;
 
-    while(true)
+    while (isRunning)
     {
         // Deteksi apakah ada perubahan yang perlu di-redraw
         bool mouseAction = handleMouse();
@@ -101,5 +101,6 @@ int main()
     if (bgImage) {
         free(bgImage);
     }
+    closegraph();
     return 0;
 }

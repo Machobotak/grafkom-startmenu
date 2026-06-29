@@ -3,6 +3,7 @@
 
 bool startMenuOpen = false;
 bool needsRedraw = true; // Awalnya true untuk initial draw
+bool isRunning = true;
 
 static int lastHour = -1;
 static int lastMinute = -1;

@@ -3,6 +3,7 @@
 
 extern bool startMenuOpen;
 extern bool needsRedraw;
+extern bool isRunning;
 
 // Fungsi untuk deteksi perubahan state
 bool hasTimeChanged();
