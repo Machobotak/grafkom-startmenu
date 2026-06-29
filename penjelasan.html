@@ -1,0 +1,1298 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dokumentasi Proyek Grafkom Start Menu</title><style>/* ============ ROOT VARIABLES (DARK MODE - DEFAULT) ============ */
+:root {
+    --bg-primary: #1a1b2e; --bg-secondary: #232540; --bg-tertiary: #2a2d4a;
+    --bg-card: #252845; --bg-code: #1e1f36; --bg-sidebar: #1a1b2e;
+    --text-primary: #e4e6f0; --text-secondary: #b4b8cc; --text-muted: #888ba0;
+    --accent: #6c8cff; --accent-hover: #8ba4ff; --accent-soft: rgba(108,140,255,0.12);
+    --info-bg: rgba(108,140,255,0.1); --info-border: #6c8cff;
+    --warning-bg: rgba(255,183,77,0.1); --warning-border: #ffb74d;
+    --tip-bg: rgba(129,199,132,0.1); --tip-border: #81c784;
+    --danger-bg: rgba(239,83,80,0.1); --danger-border: #ef5350;
+    --border: #3a3d5c; --border-light: #2e3150; --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    --syn-keyword: #c792ea; --syn-string: #c3e88d; --syn-comment: #676e95;
+    --syn-number: #f78c6c; --syn-func: #82aaff; --syn-type: #ffcb6b;
+    --syn-preprocessor: #89ddff; --syn-operator: #89ddff;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 15px; line-height: 1.7; color: var(--text-primary);
+    background: var(--bg-primary);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { display: flex; min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+    position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+    background: var(--bg-sidebar); border-right: 1px solid var(--border);
+    overflow-y: auto; z-index: 100; transition: transform .3s ease;
+}
+.sidebar-header {
+    padding: 20px; border-bottom: 1px solid var(--border-light);
+    position: sticky; top: 0; background: var(--bg-sidebar); z-index: 2;
+}
+.sidebar-header h2 { font-size: 16px; font-weight: 700; color: var(--accent); margin: 0; }
+.sidebar-header p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.sidebar-nav { padding: 12px 0; }
+.sidebar-nav a {
+    display: block; padding: 7px 20px; font-size: 13px; color: var(--text-secondary);
+    border-left: 3px solid transparent; transition: all .15s ease;
+}
+.sidebar-nav a:hover, .sidebar-nav a.active {
+    color: var(--text-primary); background: var(--accent-soft); border-left-color: var(--accent);
+}
+.sidebar-nav .nav-section {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); padding: 16px 20px 6px;
+}
+.sidebar-nav .nav-sub { padding-left: 32px; font-size: 12px; }
+
+/* ============ MAIN CONTENT ============ */
+.main-content {
+    flex: 1; margin-left: 260px; padding: 40px 48px; max-width: 1100px; min-width: 0;
+}
+.hero {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border: 1px solid var(--border); border-radius: 12px; padding: 36px 40px; margin-bottom: 32px;
+}
+.hero h1 { font-size: 28px; font-weight: 700; color: var(--text-primary); margin: 0 0 8px; }
+.hero p { font-size: 15px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+.hero .badge {
+    display: inline-block; background: var(--accent-soft); color: var(--accent);
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; margin-right: 6px;
+}
+
+/* ============ CARDS ============ */
+.card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 28px 32px; margin-bottom: 24px; box-shadow: var(--shadow);
+}
+.card h2 {
+    font-size: 20px; font-weight: 700; margin: 0 0 6px; color: var(--text-primary);
+    padding-bottom: 10px; border-bottom: 1px solid var(--border-light);
+}
+.card h3 { font-size: 16px; font-weight: 600; margin: 18px 0 8px; color: var(--accent); }
+.card h4 { font-size: 14px; font-weight: 600; margin: 12px 0 6px; color: var(--text-primary); }
+.card p, .card li { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+.card ul, .card ol { padding-left: 24px; margin-bottom: 12px; }
+.card li { margin-bottom: 4px; }
+strong { color: var(--text-primary); font-weight: 600; }
+em { color: var(--accent); }
+code {
+    background: var(--bg-code); color: var(--syn-keyword); padding: 2px 6px;
+    border-radius: 4px; font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+    font-size: 13px;
+}
+
+/* ============ CODE BLOCKS ============ */
+.code-block {
+    position: relative; background: var(--bg-code); border: 1px solid var(--border);
+    border-radius: 8px; margin: 16px 0; overflow: hidden;
+}
+.code-block .lang-tag {
+    position: absolute; top: 8px; right: 56px; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--text-muted); background: var(--bg-card);
+    padding: 2px 8px; border-radius: 4px;
+}
+.code-block .copy-btn {
+    position: absolute; top: 8px; right: 8px; background: var(--bg-card);
+    color: var(--text-secondary); border: 1px solid var(--border); padding: 4px 12px;
+    border-radius: 4px; cursor: pointer; font-size: 11px; transition: all .15s ease;
+}
+.code-block .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.code-block .copy-btn.copied { background: #81c784; color: #1a1b2e; border-color: #81c784; }
+.code-block pre { margin: 0; padding: 40px 16px 16px; overflow-x: auto; }
+.code-block pre code {
+    padding: 0; background: 0 0; font-size: 13px; line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* ============ SYNTAX HIGHLIGHTING ============ */
+.kw { color: var(--syn-keyword); } .st { color: var(--syn-string); }
+.cm { color: var(--syn-comment); } .nu { color: var(--syn-number); }
+.fn { color: var(--syn-func); } .tp { color: var(--syn-type); }
+.pp { color: var(--syn-preprocessor); } .op { color: var(--syn-operator); }
+
+/* ============ CALLOUTS ============ */
+.callout {
+    border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 16px 20px;
+    margin: 16px 0; background: var(--bg-secondary); font-size: 14px;
+}
+.callout-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.callout p { margin: 4px 0; color: var(--text-secondary); }
+.callout.info { border-left-color: var(--info-border); background: var(--info-bg); }
+.callout.info .callout-title { color: var(--info-border); }
+.callout.warning { border-left-color: var(--warning-border); background: var(--warning-bg); }
+.callout.warning .callout-title { color: var(--warning-border); }
+.callout.tip { border-left-color: var(--tip-border); background: var(--tip-bg); }
+.callout.tip .callout-title { color: var(--tip-border); }
+.callout.danger { border-left-color: var(--danger-border); background: var(--danger-bg); }
+.callout.danger .callout-title { color: var(--danger-border); }
+
+/* ============ DIAGRAMS ============ */
+.diagram {
+    background: var(--bg-secondary); border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px; margin: 16px 0; overflow-x: auto;
+}
+.diagram-label {
+    font-size: 11px; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 12px;
+}
+.flow-box {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    justify-content: center; font-size: 13px;
+}
+.flow-node {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 18px; text-align: center; color: var(--text-primary); font-weight: 600;
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 12px; min-width: 80px;
+}
+.flow-node.highlight { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.flow-arrow { color: var(--text-muted); font-size: 20px; font-weight: 700; }
+.flow-arrow.down { display: block; text-align: center; }
+
+/* ============ TABLES ============ */
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+.table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table-wrap th {
+    background: var(--bg-tertiary); color: var(--text-primary); font-weight: 600;
+    padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); font-size: 12px;
+}
+.table-wrap td { padding: 8px 14px; border-bottom: 1px solid var(--border-light); color: var(--text-secondary); }
+.table-wrap tr:hover td { background: var(--accent-soft); }
+
+/* ============ SUMMARY BOX ============ */
+.summary-box {
+    background: linear-gradient(135deg, var(--accent-soft), rgba(108,140,255,0.05));
+    border: 1px solid var(--accent); border-radius: 10px; padding: 20px 24px; margin: 20px 0;
+}
+.summary-box h4 { color: var(--accent); margin: 0 0 6px; font-size: 14px; }
+.summary-box p { color: var(--text-primary); font-size: 14px; margin: 0; }
+
+/* ============ BACK TO TOP ============ */
+.top-btn {
+    position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff;
+    border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px;
+    cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: all .2s ease;
+    opacity: 0; pointer-events: none; z-index: 50;
+}
+.top-btn.visible { opacity: 1; pointer-events: auto; }
+.top-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+/* ============ MOBILE ============ */
+.hamburger {
+    display: none; position: fixed; top: 12px; left: 12px; z-index: 200;
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary);
+    width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 18px;
+}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+.overlay.active { display: block; }
+@media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .hamburger { display: flex; align-items: center; justify-content: center; }
+    .main-content { margin-left: 0; padding: 24px 16px; }
+    .hero { padding: 24px 20px; }
+    .hero h1 { font-size: 22px; }
+    .card { padding: 20px 16px; }
+    .code-block pre { padding: 36px 12px 12px; font-size: 12px; }
+}</style></head><body>
+<!-- ============ SIDEBAR NAVIGASI ============ -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2>Grafkom Startmenu</h2>
+    <p>Dokumentasi Lengkap</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Ringkasan</div>
+    <a data-target="overview" href="#overview">Ikhtisar Proyek</a>
+    <a data-target="architecture" href="#architecture">Arsitektur</a>
+    <div class="nav-section">File Utama</div>
+    <a data-target="main" href="#main">main.cpp</a>
+    <a data-target="desktop" href="#desktop">desktop.cpp</a>
+    <a data-target="startmenu" href="#startmenu">startmenu.cpp</a>
+    <a data-target="taskbar" href="#taskbar">taskbar.cpp</a>
+    <a data-target="clock" href="#clock">clock.cpp</a>
+    <a data-target="mouse" href="#mouse">mouse.cpp</a>
+    <a data-target="utils" href="#utils">utils.cpp</a>
+    <div class="nav-section">Header Files</div>
+    <a data-target="headers" href="#headers" class="nav-sub">Semua Header</a>
+    <div class="nav-section">Lainnya</div>
+    <a data-target="concepts" href="#concepts">Konsep C++ &amp; WinBGIm</a>
+    <a data-target="improvements" href="#improvements">Saran Perbaikan</a>
+  </nav>
+</aside>
+<main class="main-content">
+<!-- ============ HERO / JUDUL ============ -->
+<div class="hero" data-nav-id="overview">
+  <h1>Dokumentasi Proyek Grafkom Start Menu</h1>
+  <p>
+    <span class="badge">C++</span>
+    <span class="badge">WinBGIm</span>
+    <span class="badge">graphics.h</span>
+  </p>
+  <p style="margin-top:12px;">
+    Proyek ini adalah simulasi antarmuka <strong>Windows XP Start Menu</strong> dan <strong>Desktop</strong>
+    yang dibuat untuk mata kuliah <strong>Grafika Komputer</strong>. Program menggunakan library
+    <strong>WinBGIm</strong> (<code>graphics.h</code>) untuk menggambar grafik 2D secara langsung
+    tanpa akselerasi GPU. Dokumentasi ini menjelaskan setiap file secara mendalam &mdash;
+    bukan hanya <em>apa</em> yang dilakukan kode, tetapi juga <em>mengapa</em> implementasi tersebut dipilih.
+  </p>
+</div>
+
+<!-- ============ ARSITEKTUR ============ -->
+<div data-nav-id="architecture" class="card">
+<h2>Arsitektur Proyek</h2>
+<h3>Struktur Direktori</h3>
+<div class="code-block"><span class="lang-tag">text</span><button class="copy-btn">Copy</button><pre><code>
+grafkom-startmenu/
+  src/            # File implementasi (.cpp)
+    main.cpp      # Entry point, game loop, double buffering
+    desktop.cpp   # Wallpaper &amp; ikon desktop
+    startmenu.cpp # Start menu, animasi, pop-up
+    taskbar.cpp   # Taskbar &amp; tombol Start
+    clock.cpp     # Jam digital di taskbar
+    mouse.cpp     # Input mouse &amp; keyboard
+    utils.cpp     # State global &amp; utilitas
+  include/        # File header (.h)
+    desktop.h, startmenu.h, taskbar.h,
+    clock.h, mouse.h, utils.h
+  assets/         # Gambar bitmap (.bmp)
+    wallpaper.bmp, start.bmp, browser.bmp,
+    folder.bmp, settings.bmp, profile.bmp,
+    power.bmp
+</code></pre></div>
+
+<h3>Diagram Alur Program</h3>
+<div class="diagram">
+<div class="diagram-label">Alur Utama (Main Loop)</div>
+<div class="flow-box">
+  <div class="flow-node highlight">initwindow()</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">drawDesktop()</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">Simpan bgImage</div>
+</div>
+<div class="flow-arrow down">&darr;</div>
+<div class="flow-box">
+  <div class="flow-node highlight">Double Buffer</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">putimage() bg</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">drawTaskbar()</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">drawStartMenu()</div>
+</div>
+<div class="flow-arrow down">&darr;</div>
+<div class="flow-box">
+  <div class="flow-node highlight">Main Loop</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">handleMouse()</div>
+  <div class="flow-node">handleKeyboard()</div>
+  <div class="flow-node">isTimeChanged()</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">Redraw jika perlu</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">delay(16) ~60FPS</div>
+</div>
+</div>
+
+<h3>Hubungan Antar File</h3>
+<div class="diagram">
+<div class="diagram-label">Dependency Graph</div>
+<div class="flow-box">
+  <div class="flow-node highlight">main.cpp</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-node">desktop.cpp</div>
+  <div class="flow-node">taskbar.cpp</div>
+  <div class="flow-node">startmenu.cpp</div>
+  <div class="flow-node">mouse.cpp</div>
+  <div class="flow-node">clock.cpp</div>
+  <div class="flow-node">utils.cpp</div>
+</div>
+<p style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">
+main.cpp adalah pengendali utama yang memanggil semua modul lain. Semua file .cpp meng-include header masing-masing dari folder include/.
+</p>
+</div>
+
+<h3>Header File</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Header</th><th>Deklarasi</th><th>Fungsi</th></tr></thead>
+<tbody>
+<tr><td><code>desktop.h</code></td><td><code>drawDesktop()</code></td><td>Menggambar wallpaper &amp; ikon desktop</td></tr>
+<tr><td><code>taskbar.h</code></td><td><code>drawTaskbar()</code></td><td>Menggambar taskbar &amp; jam</td></tr>
+<tr><td><code>startmenu.h</code></td><td><code>drawStartMenu(), toggleStartMenu(), getAnimProgress(), isHoveringProgramsChanged()</code></td><td>Menggambar &amp; mengelola Start Menu</td></tr>
+<tr><td><code>clock.h</code></td><td><code>drawClock(), isTimeChanged()</code></td><td>Jam digital di taskbar</td></tr>
+<tr><td><code>mouse.h</code></td><td><code>handleMouse(), handleKeyboard()</code></td><td>Input mouse &amp; keyboard</td></tr>
+<tr><td><code>utils.h</code></td><td><code>extern bool startMenuOpen, needsRedraw, isRunning</code></td><td>Variabel global &amp; state</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<!-- ============ MAIN.CPP ============ -->
+<div data-nav-id="main" class="card">
+<h2>main.cpp &mdash; Entry Point &amp; Game Loop</h2>
+
+<h3>1. Tujuan File</h3>
+<p><code>main.cpp</code> adalah <strong>pusat kendali</strong> seluruh program. File ini menginisialisasi jendela grafis 1280x720, menggambar tampilan awal, menyimpan buffer desktop, dan menjalankan <strong>game loop</strong> utama yang menangani input serta me-redraw layar ~60 kali per detik menggunakan <strong>double buffering</strong>.</p>
+
+<div class="callout tip">
+<div class="callout-title">&#128161; Konsep Kunci: Game Loop</div>
+<p>Dalam pemrograman grafis (dan game), "game loop" adalah pola di mana program terus berulang: membaca input &rarr; memperbarui state &rarr; menggambar ulang layar &rarr; menunggu sebentar. Ini memastikan tampilan selalu responsif terhadap perubahan. Bayangkan seperti flip book &mdash; setiap halaman adalah satu frame, dan ketika dibalik cepat, gambarnya terlihat bergerak.</p>
+</div>
+
+<h3>2. Penjelasan Setiap #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Kategori</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include &lt;iostream&gt;</code></td><td>C++ Standard</td><td>Untuk <code>std::cout</code> &mdash; mencetak log debug ke konsol. Hanya digunakan saat startup.</td></tr>
+<tr><td><code>#include &lt;graphics.h&gt;</code></td><td>WinBGIm</td><td>Library utama: operasi grafis, mouse, keyboard, double buffering.</td></tr>
+<tr><td><code>#include &lt;stdlib.h&gt;</code></td><td>C Standard</td><td>Menyediakan <code>malloc()</code> dan <code>free()</code> untuk alokasi memori dinamis buffer gambar.</td></tr>
+<tr><td><code>#include "../include/desktop.h"</code></td><td>Project</td><td>Deklarasi fungsi <code>drawDesktop()</code>.</td></tr>
+<tr><td><code>#include "../include/taskbar.h"</code></td><td>Project</td><td>Deklarasi fungsi <code>drawTaskbar()</code>.</td></tr>
+<tr><td><code>#include "../include/startmenu.h"</code></td><td>Project</td><td>Deklarasi fungsi-fungsi Start Menu dan animasi.</td></tr>
+<tr><td><code>#include "../include/mouse.h"</code></td><td>Project</td><td>Deklarasi <code>handleMouse()</code> dan <code>handleKeyboard()</code>.</td></tr>
+<tr><td><code>#include "../include/clock.h"</code></td><td>Project</td><td>Deklarasi <code>drawClock()</code> dan <code>isTimeChanged()</code>.</td></tr>
+<tr><td><code>#include "../include/utils.h"</code></td><td>Project</td><td>Deklarasi variabel global (<code>startMenuOpen</code>, <code>isRunning</code>).</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Variabel Global Statis</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">static</span> <span class="tp">bool</span> needsFullRedraw <span class="op">=</span> <span class="kw">true</span>;
+<span class="kw">static</span> <span class="tp">bool</span> needsMenuRedraw <span class="op">=</span> <span class="kw">false</span>;
+<span class="kw">static</span> <span class="tp">bool</span> needsClockRedraw <span class="op">=</span> <span class="kw">false</span>;
+</code></pre></div>
+<p><strong>Mengapa <code>static</code> di level file?</strong> Kata kunci <code>static</code> pada variabel global membatasi <em>linkage</em>-nya hanya ke file ini (<em>internal linkage</em>). Variabel ini tidak bisa diakses dari file .cpp lain. Ini lebih aman daripada variabel global biasa karena mencegah modifikasi tak sengaja dari modul lain.</p>
+
+<h3>4. Fungsi <code>main()</code> &mdash; Penjelasan Mendalam</h3>
+<h4>Tujuan</h4>
+<p>Entry point program. Menginisialisasi, menjalankan game loop, dan membersihkan resources saat selesai.</p>
+<h4>Parameter</h4>
+<p>Tidak ada (standard <code>main()</code> tanpa command-line arguments).</p>
+<h4>Nilai Kembali</h4>
+<p><code>0</code> = program selesai normal.</p>
+<h4>Alur Kerja Langkah Demi Langkah</h4>
+<ol>
+<li><strong>Inisialisasi Window</strong> &mdash; <code>initwindow(1280, 720, "Start Menu Clone")</code> membuat jendela grafis. <strong>Mengapa 1280x720?</strong> Resolusi HD standar yang cukup untuk menampilkan desktop + taskbar + start menu tanpa scroll.</li>
+<li><strong>Gambar Desktop</strong> &mdash; Memanggil <code>drawDesktop()</code> untuk menggambar wallpaper dan ikon.</li>
+<li><strong>Simpan Desktop ke Buffer</strong> &mdash; <code>imagesize()</code> menghitung ukuran memori yang dibutuhkan, <code>malloc()</code> mengalokasikannya, <code>getimage()</code> menyalin piksel dari layar ke buffer. <strong>Ini adalah optimasi kunci:</strong> desktop hanya perlu digambar sekali (melibatkan pembacaan file .bmp yang lambat), lalu tinggal di-copy dari buffer setiap kali redraw diperlukan.</li>
+<li><strong>Double Buffer Setup Awal</strong> &mdash; Menggambar di halaman tersembunyi, lalu menukar ke halaman yang terlihat.</li>
+<li><strong>Game Loop</strong> &mdash; Loop <code>while (isRunning)</code> berjalan terus:
+  <ul>
+  <li>Membaca input mouse (<code>handleMouse()</code>) dan keyboard (<code>handleKeyboard()</code>)</li>
+  <li>Mengecek perubahan waktu (<code>isTimeChanged()</code>) untuk update jam</li>
+  <li>Mengecek status animasi Start Menu (<code>getAnimProgress()</code>)</li>
+  <li>Mendeteksi perubahan hover state (<code>isHoveringProgramsChanged()</code>)</li>
+  <li>Menentukan flag redraw berdasarkan semua perubahan di atas</li>
+  <li>Jika redraw diperlukan: restore desktop dari buffer &rarr; gambar taskbar &rarr; gambar start menu &rarr; tukar halaman buffer</li>
+  <li><code>delay(16)</code> &mdash; menunggu 16 milidetik (~60 FPS)</li>
+  </ul>
+</li>
+<li><strong>Cleanup</strong> &mdash; <code>free(bgImage)</code> melepaskan memori, <code>closegraph()</code> menutup jendela.</li>
+</ol>
+
+<div class="callout info">
+<div class="callout-title">&#8505; Mengapa 60 FPS?</div>
+<p>Layar monitor umumnya me-refresh 60 kali per detik (60 Hz). Dengan menggambar 60 frame per detik, animasi terlihat mulus. <code>delay(16)</code> (16 ms &asymp; 1000/60) adalah pendekatan sederhana. Namun, ini tidak memperhitungkan waktu yang dihabiskan untuk operasi lain (menggambar, input handling), sehingga FPS aktual bisa lebih rendah.</p>
+</div>
+
+<h3>5. Blok Kode Penting</h3>
+<h4>5.1 Double Buffering</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="cm">// Halaman aktif untuk menggambar (tidak terlihat)</span>
+<span class="fn">setactivepage</span>(<span class="nu">1</span> <span class="op">-</span> page);
+
+<span class="cm">// Restore desktop dari buffer</span>
+<span class="fn">putimage</span>(<span class="nu">0</span>, <span class="nu">0</span>, bgImage, COPY_PUT);
+
+<span class="cm">// Gambar elemen UI</span>
+<span class="fn">drawTaskbar</span>();
+<span class="fn">drawStartMenu</span>();
+
+<span class="cm">// Tukar ke halaman yang terlihat</span>
+<span class="fn">setvisualpage</span>(<span class="nu">1</span> <span class="op">-</span> page);
+page <span class="op">=</span> <span class="nu">1</span> <span class="op">-</span> page;  <span class="cm">// Toggle halaman</span>
+</code></pre></div>
+<p><strong>Analogi:</strong> Bayangkan seorang pesulap yang memiliki dua papan tulis. Penonton hanya melihat satu papan. Pesulap menggambar di papan tersembunyi, lalu ketika selesai, langsung menukar papan. Penonton tidak pernah melihat proses menggambar, hanya hasil akhirnya. Inilah prinsip double buffering.</p>
+
+<h4>5.2 Deteksi Perubahan State (Dirty Flag Pattern)</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="tp">bool</span> mouseAction <span class="op">=</span> <span class="fn">handleMouse</span>();
+<span class="tp">bool</span> keyAction <span class="op">=</span> <span class="fn">handleKeyboard</span>();
+<span class="tp">bool</span> timeChanged <span class="op">=</span> <span class="fn">isTimeChanged</span>();
+<span class="tp">float</span> currentAnimProgress <span class="op">=</span> <span class="fn">getAnimProgress</span>();
+
+<span class="cm">// Deteksi animasi yang sedang berjalan</span>
+<span class="tp">bool</span> isAnimating <span class="op">=</span> (currentAnimProgress <span class="op">&gt;</span> <span class="nu">0.0f</span> <span class="op">&amp;&amp;</span> currentAnimProgress <span class="op">&lt;</span> <span class="nu">1.0f</span>)
+                   <span class="op">||</span> (currentAnimProgress <span class="op">!=</span> lastAnimProgress);
+
+<span class="cm">// Deteksi tepat satu frame saat animasi selesai</span>
+<span class="kw">static</span> <span class="tp">bool</span> wasAnimating <span class="op">=</span> <span class="kw">false</span>;
+<span class="tp">bool</span> animationJustFinished <span class="op">=</span> (wasAnimating <span class="op">&amp;&amp;</span> <span class="op">!</span>isAnimating);
+wasAnimating <span class="op">=</span> isAnimating;
+
+needsMenuRedraw <span class="op">=</span> mouseAction <span class="op">||</span> keyAction <span class="op">||</span> isAnimating <span class="op">||</span> hoverChanged <span class="op">||</span> animationJustFinished;
+needsClockRedraw <span class="op">=</span> timeChanged;
+needsFullRedraw <span class="op">=</span> needsMenuRedraw <span class="op">||</span> needsClockRedraw;
+</code></pre></div>
+<p><strong>Mengapa deteksi "animationJustFinished"?</strong> Tanpa ini, ketika animasi selesai (animProgress mencapai 0.0 atau 1.0), <code>isAnimating</code> menjadi <code>false</code>, dan tidak ada redraw. Ini menyebabkan menu "menghilang tiba-tiba" tanpa frame terakhir. Deteksi <code>animationJustFinished</code> memastikan frame terakhir animasi tetap digambar.</p>
+
+<h3>6. Konsep C++ &amp; WinBGIm pada File Ini</h3>
+<ul>
+<li><strong>Double Buffering</strong> &mdash; <code>setactivepage()</code> / <code>setvisualpage()</code>: WinBGIm mendukung hingga 4 halaman grafis. Halaman aktif = tempat menggambar (tidak terlihat), halaman visual = yang ditampilkan ke layar.</li>
+<li><strong><code>imagesize()</code> / <code>getimage()</code> / <code>putimage()</code></strong> &mdash; Menyimpan dan me-restore area layar ke/dari memori. <code>imagesize()</code> mengembalikan jumlah byte yang dibutuhkan. <code>getimage()</code> menyalin piksel ke buffer. <code>putimage()</code> dengan flag <code>COPY_PUT</code> menyalin buffer ke layar.</li>
+<li><strong><code>malloc()</code> / <code>free()</code></strong> &mdash; Alokasi memori manual gaya C. Di C++ modern, <code>new</code>/<code>delete</code> atau <code>std::vector</code> lebih disarankan.</li>
+<li><strong><code>static</code> variabel lokal</strong> &mdash; Nilainya bertahan antar pemanggilan fungsi. Berguna untuk state tracking seperti <code>wasAnimating</code>.</li>
+</ul>
+
+<h3>7. Saran Perbaikan</h3>
+<ul>
+<li><strong>Gunakan <code>std::vector&lt;unsigned char&gt;</code></strong> alih-alih <code>malloc()</code> &mdash; Lebih idiomatis C++, RAII (otomatis dibersihkan), type-safe. Namun fallback saat <code>malloc</code> gagal sudah baik.</li>
+<li><strong>Pisahkan game loop</strong> &mdash; <code>main()</code> melakukan terlalu banyak. Fungsi <code>run()</code> atau <code>appLoop()</code> akan meningkatkan readability.</li>
+<li><strong>Delta time</strong> &mdash; <code>delay(16)</code> mengabaikan waktu eksekusi kode lain. Gunakan <code>clock()</code> untuk menghitung delta time aktual agar frame rate lebih konsisten.</li>
+<li><strong>Gunakan <code>enum</code></strong> &mdash; Flags <code>needsFullRedraw</code> dll bisa digabung menjadi <code>enum class RedrawState</code>.</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan main.cpp</h4>
+<p>Entry point yang menjalankan game loop 60 FPS dengan double buffering. Menyimpan desktop di buffer memori untuk optimasi. Mendeteksi perubahan state dan hanya me-redraw jika diperlukan. Bertindak sebagai "konduktor orkestra" yang mengoordinasikan semua modul lain.</p>
+</div>
+</div>
+
+<!-- ============ PLACEHOLDER UNTUK FILE BERIKUTNYA ============ -->
+<!-- ============ DESKTOP.CPP ============ -->
+<div data-nav-id="desktop" class="card">
+<h2>desktop.cpp &mdash; Wallpaper &amp; Ikon Desktop</h2>
+
+<h3>1. Tujuan File</h3>
+<p>Menggambar tampilan <strong>desktop</strong>: warna latar fallback, wallpaper bitmap, dan lima ikon shortcut. Ini adalah layer paling bawah dalam stack tampilan.</p>
+
+<h3>2. Penjelasan #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include &lt;graphics.h&gt;</code></td><td>Fungsi menggambar: <code>bar()</code>, <code>readimagefile()</code>, <code>outtextxy()</code>, <code>getmaxx()</code>, dll.</td></tr>
+<tr><td><code>#include "../include/desktop.h"</code></td><td>Header sendiri &mdash; praktik terbaik C++: memastikan deklarasi cocok dengan definisi.</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Fungsi <code>drawDesktop()</code></h3>
+<h4>Tujuan</h4>
+<p>Menggambar seluruh area desktop satu kali. Hasilnya disimpan ke buffer oleh <code>main.cpp</code> untuk digunakan sepanjang program.</p>
+
+<h4>Alur Kerja Langkah Demi Langkah</h4>
+<ol>
+<li><strong>Fallback background</strong> &mdash; Menggambar kotak biru (<code>BLUE</code>) memenuhi seluruh layar dengan <code>bar(0, 0, getmaxx(), getmaxy())</code>. Ini adalah jaring pengaman jika wallpaper gagal dimuat.</li>
+<li><strong>Load wallpaper</strong> &mdash; <code>readimagefile("assets/wallpaper.bmp", 0, 0, getmaxx(), getmaxy())</code> membaca file .bmp dan menggambarnya di atas background biru. Fungsi ini tidak memberi tahu jika file tidak ditemukan; ia hanya tidak menggambar apa-apa.</li>
+<li><strong>Gambar 5 ikon</strong> &mdash; Setiap ikon: panggil <code>readimagefile()</code> untuk gambar 40x60px, lalu <code>outtextxy()</code> untuk teks label di bawahnya. Koordinat Y setiap ikon bergeser ~110px: 20, 130, 240, 350, 460.</li>
+</ol>
+
+<h3>4. Blok Kode Penting</h3>
+<h4>Fallback Background</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="cm">// Fallback background color (biru)</span>
+<span class="fn">setfillstyle</span>(SOLID_FILL, BLUE);
+<span class="fn">bar</span>(<span class="nu">0</span>, <span class="nu">0</span>, <span class="fn">getmaxx</span>(), <span class="fn">getmaxy</span>());
+
+<span class="cm">// Coba load wallpaper jika ada</span>
+<span class="fn">readimagefile</span>(<span class="st">"assets/wallpaper.bmp"</span>,
+                  <span class="nu">0</span>, <span class="nu">0</span>,
+                  <span class="fn">getmaxx</span>(), <span class="fn">getmaxy</span>());
+</code></pre></div>
+<p><strong>Mengapa fallback dan bukan cek error?</strong> <code>readimagefile()</code> tidak mengembalikan kode error. Jika file tidak ada, fungsi ini diam-diam tidak menggambar apa pun. Background biru memastikan layar tidak kosong (hitam).</p>
+
+<h4>Pola Penggambaran Ikon</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="fn">readimagefile</span>(<span class="st">"assets/browser.bmp"</span>,
+                  <span class="nu">20</span>, <span class="nu">20</span>,   <span class="cm">// kiri-atas</span>
+                  <span class="nu">80</span>, <span class="nu">80</span>);  <span class="cm">// kanan-bawah</span>
+<span class="fn">outtextxy</span>(<span class="nu">25</span>, <span class="nu">90</span>, (<span class="tp">char</span><span class="op">*</span>)<span class="st">"Browser"</span>);
+</code></pre></div>
+<p><strong>Mengapa cast <code>(char*)</code>?</strong> Fungsi <code>outtextxy()</code> adalah warisan dari C lama yang mengharapkan <code>char*</code> non-const. String literal di C++ bertipe <code>const char*</code>, sehingga perlu cast. Di library modern, parameter ini seharusnya <code>const char*</code>.</p>
+
+<h3>5. Konsep WinBGIm</h3>
+<ul>
+<li><strong><code>readimagefile()</code></strong> &mdash; Membaca file .bmp dan langsung menggambarnya ke layar dengan scaling otomatis. Mendukung format Windows BMP.</li>
+<li><strong><code>getmaxx()</code> / <code>getmaxy()</code></strong> &mdash; Mengembalikan lebar/tinggi maksimum area gambar dalam piksel. Berguna untuk menggambar elemen yang mengisi seluruh layar.</li>
+<li><strong><code>setfillstyle()</code> + <code>bar()</code></strong> &mdash; <code>setfillstyle</code> mengatur pola dan warna isian, <code>bar()</code> menggambar kotak terisi.</li>
+<li><strong><code>outtextxy(x, y, text)</code></strong> &mdash; Menggambar teks di koordinat (x,y) menggunakan font bitmap default 8x8.</li>
+</ul>
+
+<h3>6. Saran Perbaikan</h3>
+<ul>
+<li><strong>Cek file dengan <code>std::ifstream</code></strong> &mdash; Sebelum <code>readimagefile()</code>, cek apakah file ada. Jika tidak, tampilkan placeholder atau pesan.</li>
+<li><strong>Gunakan array ikon + loop</strong> &mdash; Lima ikon digambar dengan kode hampir identik. Struktur data:
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">struct</span> <span class="tp">Icon</span> { <span class="kw">const</span> <span class="tp">char</span><span class="op">*</span> path; <span class="tp">int</span> x, y; <span class="kw">const</span> <span class="tp">char</span><span class="op">*</span> label; };
+<span class="tp">Icon</span> icons[] <span class="op">=</span> {
+  {<span class="st">"assets/browser.bmp"</span>,  <span class="nu">20</span>, <span class="nu">20</span>,  <span class="st">"Browser"</span>},
+  {<span class="st">"assets/folder.bmp"</span>,   <span class="nu">20</span>, <span class="nu">130</span>, <span class="st">"Folder"</span>},
+  <span class="cm">// ...dan seterusnya</span>
+};
+<span class="kw">for</span> (<span class="kw">auto</span><span class="op">&amp;</span> icon : icons) {
+    <span class="fn">readimagefile</span>(icon.path, icon.x, icon.y, icon.x<span class="op">+</span><span class="nu">60</span>, icon.y<span class="op">+</span><span class="nu">60</span>);
+    <span class="fn">outtextxy</span>(icon.x<span class="op">+</span><span class="nu">5</span>, icon.y<span class="op">+</span><span class="nu">70</span>, (<span class="tp">char</span><span class="op">*</span>)icon.label);
+}</code></pre></div>
+Ini akan mengurangi duplikasi kode secara signifikan.</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan desktop.cpp</h4>
+<p>Menggambar layer dasar (desktop): background biru sebagai fallback, wallpaper dari file .bmp, dan 5 ikon shortcut. Fungsi tunggal <code>drawDesktop()</code> dipanggil <strong>sekali</strong> saat startup, lalu hasilnya disimpan ke buffer memori oleh <code>main.cpp</code>. Saat redraw, buffer tinggal di-copy — jauh lebih cepat daripada membaca file .bmp berulang kali.</p>
+</div>
+</div>
+
+<!-- ============ STARTMENU.CPP ============ -->
+<div data-nav-id="startmenu" class="card">
+<h2>startmenu.cpp &mdash; Start Menu, Animasi &amp; Pop-Up</h2>
+
+<h3>1. Tujuan File</h3>
+<p>File paling kompleks dalam proyek. Menangani:</p>
+<ul>
+<li><strong>Animasi buka/tutup Start Menu</strong> menggunakan interpolasi linear (progress 0.0 &rarr; 1.0)</li>
+<li><strong>Layout dua kolom</strong> &mdash; kolom kiri (putih, menu utama + All Programs), kolom kanan (biru muda, menu sekunder)</li>
+<li><strong>Header &amp; Footer</strong> &mdash; header biru dengan avatar, footer biru dengan tombol Log Off dan Turn Off Computer</li>
+<li><strong>Pop-up sub-menu "All Programs"</strong> dengan animasi terpisah dan shadow</li>
+<li><strong>Deteksi hover</strong> untuk setiap menu item (highlight saat kursor di atasnya)</li>
+<li><strong>Deteksi perubahan state</strong> untuk memberi tahu main loop kapan harus redraw</li>
+</ul>
+
+<h3>2. Penjelasan #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include &lt;graphics.h&gt;</code></td><td>Fungsi gambar, <code>mousex()</code>, <code>mousey()</code>, <code>ismouseclick()</code>.</td></tr>
+<tr><td><code>#include &lt;math.h&gt;</code></td><td>Fungsi matematika (sebenarnya tidak digunakan secara eksplisit dalam kode ini, mungkin disiapkan untuk easing functions).</td></tr>
+<tr><td><code>#include &lt;stdlib.h&gt;</code></td><td><code>exit()</code> untuk keluar program saat klik "Turn Off Computer".</td></tr>
+<tr><td><code>#include "../include/startmenu.h"</code></td><td>Header sendiri.</td></tr>
+<tr><td><code>#include "../include/utils.h"</code></td><td>Variabel <code>startMenuOpen</code> (state global buka/tutup menu).</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Variabel Global Statis</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">static</span> <span class="tp">float</span> animProgress      <span class="op">=</span> <span class="nu">0.0f</span>;  <span class="cm">// Progress animasi menu utama (0..1)</span>
+<span class="kw">static</span> <span class="tp">float</span> popupAnimProgress <span class="op">=</span> <span class="nu">0.0f</span>;  <span class="cm">// Progress animasi pop-up All Programs</span>
+<span class="kw">static</span> <span class="tp">bool</span>  isHoveringPrograms <span class="op">=</span> <span class="kw">false</span>; <span class="cm">// Mouse di atas "All Programs"?</span>
+<span class="kw">static</span> <span class="tp">bool</span>  lastHoveringPrograms <span class="op">=</span> <span class="kw">false</span>; <span class="cm">// State hover sebelumnya</span>
+<span class="kw">static</span> <span class="tp">int</span>   lastMouseX <span class="op">=</span> <span class="op">-</span><span class="nu">1</span>;        <span class="cm">// Posisi mouse sebelumnya (X)</span>
+<span class="kw">static</span> <span class="tp">int</span>   lastMouseY <span class="op">=</span> <span class="op">-</span><span class="nu">1</span>;        <span class="cm">// Posisi mouse sebelumnya (Y)</span>
+</code></pre></div>
+<p><strong>Mengapa <code>static</code> di level file?</strong> Semua variabel ini hanya relevan untuk <code>startmenu.cpp</code>. <code>static</code> menyembunyikannya dari file lain, mencegah coupling tak sengaja (misalnya, file lain mengubah <code>animProgress</code> langsung).</p>
+
+<h3>4. Fungsi <code>drawMenuItem()</code> (Helper)</h3>
+<h4>Tujuan</h4>
+<p>Fungsi pembantu yang menggambar satu item menu dengan dukungan hover. Menghindari duplikasi kode untuk setiap item menu (ada 15+ item).</p>
+<h4>Parameter</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Parameter</th><th>Tipe</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>x, y, w, h</code></td><td><code>int</code></td><td>Posisi dan ukuran item (x, y, width, height)</td></tr>
+<tr><td><code>text</code></td><td><code>const char*</code></td><td>Teks yang ditampilkan</td></tr>
+<tr><td><code>mx, my</code></td><td><code>int</code></td><td>Posisi mouse saat ini</td></tr>
+<tr><td><code>bgNormal, fgNormal</code></td><td><code>int</code></td><td>Warna background &amp; teks saat normal</td></tr>
+<tr><td><code>bgHover, fgHover</code></td><td><code>int</code></td><td>Warna background &amp; teks saat di-hover</td></tr>
+<tr><td><code>textX, textY</code></td><td><code>int</code></td><td>Posisi teks (terpisah dari posisi kotak)</td></tr>
+</tbody>
+</table></div>
+<h4>Nilai Kembali</h4>
+<p><code>bool</code> &mdash; <code>true</code> jika mouse sedang di atas item ini (hovered).</p>
+
+<div class="callout tip">
+<div class="callout-title">&#128161; Mengapa textX/textY terpisah?</div>
+<p>Kotak background (<code>bar</code>) dan teks (<code>outtextxy</code>) menggunakan koordinat yang sedikit berbeda. Kotak perlu menutupi seluruh area yang bisa di-hover, sementara teks perlu sedikit padding dari tepi kiri. Memisahkan keduanya memberi fleksibilitas layout tanpa menambah kompleksitas.</p>
+</div>
+
+<h3>5. Fungsi <code>drawStartMenu()</code> &mdash; Jantung Start Menu</h3>
+<h4>Tujuan</h4>
+<p>Menggambar seluruh Start Menu: header, dua kolom, footer, item menu, dan pop-up "All Programs". Dipanggil setiap frame (dalam game loop) karena animasi dan hover berubah terus-menerus.</p>
+
+<h4>Alur Kerja Langkah Demi Langkah</h4>
+<ol>
+<li><strong>Update Animasi</strong> &mdash; Jika menu terbuka (<code>startMenuOpen == true</code>), <code>animProgress</code> naik dari 0 ke 1. Jika tertutup, turun dari 1 ke 0. Kecepatan: <code>animSpeed = 0.1f</code> per frame (~10 frame untuk animasi penuh).</li>
+<li><strong>Early Exit</strong> &mdash; Jika <code>animProgress &lt;= 0</code>, return tanpa menggambar apa pun (menu sepenuhnya tersembunyi).</li>
+<li><strong>Hitung Dimensi Menu</strong> &mdash; Tinggi menu = <code>targetHeight * animProgress</code>. Menu "tumbuh" dari bawah (taskbar) ke atas.</li>
+<li><strong>Gambar Header</strong> &mdash; Kotak biru di atas menu. Jika animasi > 20%, tampilkan teks "Administrator" dan avatar placeholder (kotak abu-abu).</li>
+<li><strong>Gambar Kolom Kiri (Putih)</strong> &mdash; <code>bar()</code> dari bawah header ke atas footer.</li>
+<li><strong>Gambar Kolom Kanan (Biru Muda)</strong> &mdash; <code>bar()</code> di sebelah kanan kolom kiri.</li>
+<li><strong>Gambar Footer</strong> &mdash; Kotak biru di bawah menu.</li>
+<li><strong>Gambar Item Menu</strong> &mdash; Jika animasi > 80%, gambar semua item menggunakan <code>drawMenuItem()</code>.</li>
+<li><strong>Deteksi Hover "All Programs"</strong> &mdash; Cek apakah mouse di atas area tombol "All Programs".</li>
+<li><strong>Update Animasi Pop-Up</strong> &mdash; Sama seperti menu utama, tapi lebih cepat (<code>animSpeed * 1.5</code>).</li>
+<li><strong>Gambar Pop-Up</strong> &mdash; Jika <code>popupAnimProgress > 0</code>: shadow (kotak abu-abu offset), background putih, border biru, dan item menu pop-up.</li>
+<li><strong>Update State Tracking</strong> &mdash; Simpan <code>lastHoveringPrograms</code>, <code>lastMouseX</code>, <code>lastMouseY</code> untuk deteksi perubahan di frame berikutnya.</li>
+</ol>
+
+<h3>6. Blok Kode Penting</h3>
+
+<h4>6.1 Animasi Interpolasi Linear</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="tp">float</span> animSpeed <span class="op">=</span> <span class="nu">0.1f</span>;
+<span class="kw">if</span> (startMenuOpen) {
+    <span class="kw">if</span> (animProgress <span class="op">&lt;</span> <span class="nu">1.0f</span>) animProgress <span class="op">+=</span> animSpeed;
+    <span class="kw">if</span> (animProgress <span class="op">&gt;</span> <span class="nu">1.0f</span>) animProgress <span class="op">=</span> <span class="nu">1.0f</span>;  <span class="cm">// Clamp</span>
+} <span class="kw">else</span> {
+    <span class="kw">if</span> (animProgress <span class="op">&gt;</span> <span class="nu">0.0f</span>) animProgress <span class="op">-=</span> animSpeed;
+    <span class="kw">if</span> (animProgress <span class="op">&lt;</span> <span class="nu">0.0f</span>) animProgress <span class="op">=</span> <span class="nu">0.0f</span>;  <span class="cm">// Clamp</span>
+    isHoveringPrograms <span class="op">=</span> <span class="kw">false</span>;  <span class="cm">// Reset saat menu tertutup</span>
+}
+</code></pre></div>
+<p><strong>Mengapa linear interpolation (LERP)?</strong> Ini adalah pendekatan paling sederhana: setiap frame, progress berubah sebesar konstanta. Hasilnya adalah gerakan dengan kecepatan konstan. Kekurangannya: terasa "kaku" dibanding easing functions (ease-in-out). Namun untuk proyek pembelajaran, LERP sudah sangat baik karena mudah dipahami dan di-debug.</p>
+
+<p><strong>Mengapa clamp?</strong> Tanpa clamp, progress bisa melebihi 1.0 atau kurang dari 0.0 karena floating-point. Clamp menjaga nilai tetap dalam rentang [0, 1].</p>
+
+<h4>6.2 Layout Menu Dinamis</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="tp">int</span> startY <span class="op">=</span> <span class="fn">getmaxy</span>() <span class="op">-</span> <span class="nu">50</span>;                <span class="cm">// Posisi Y taskbar</span>
+<span class="tp">int</span> targetHeight <span class="op">=</span> <span class="nu">450</span>;                       <span class="cm">// Tinggi penuh menu</span>
+<span class="tp">int</span> currentHeight <span class="op">=</span> (<span class="tp">int</span>)(targetHeight <span class="op">*</span> animProgress); <span class="cm">// Tinggi saat ini</span>
+<span class="tp">int</span> menuY <span class="op">=</span> startY <span class="op">-</span> currentHeight;             <span class="cm">// Menu tumbuh ke atas</span>
+</code></pre></div>
+<p><strong>Mengapa <code>startY - currentHeight</code>?</strong> Menu tumbuh dari taskbar ke <strong>atas</strong>. Saat <code>animProgress = 0</code>, <code>currentHeight = 0</code> dan <code>menuY = startY</code> (menu tersembunyi di balik taskbar). Saat <code>animProgress = 1</code>, <code>currentHeight = 450</code> dan <code>menuY = startY - 450</code> (menu terbuka penuh).</p>
+
+<h4>6.3 Hover Detection &amp; Highlight</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">static</span> <span class="tp">bool</span> drawMenuItem(<span class="tp">int</span> x, <span class="tp">int</span> y, <span class="tp">int</span> w, <span class="tp">int</span> h,
+                         <span class="kw">const</span> <span class="tp">char</span><span class="op">*</span> text, <span class="tp">int</span> mx, <span class="tp">int</span> my,
+                         <span class="tp">int</span> bgNormal, <span class="tp">int</span> fgNormal,
+                         <span class="tp">int</span> bgHover, <span class="tp">int</span> fgHover,
+                         <span class="tp">int</span> textX, <span class="tp">int</span> textY) {
+    <span class="tp">bool</span> hovered <span class="op">=</span> (mx <span class="op">&gt;=</span> x <span class="op">&amp;&amp;</span> mx <span class="op">&lt;=</span> x <span class="op">+</span> w <span class="op">&amp;&amp;</span>
+                    my <span class="op">&gt;=</span> y <span class="op">&amp;&amp;</span> my <span class="op">&lt;=</span> y <span class="op">+</span> h);
+    <span class="kw">if</span> (hovered) {
+        <span class="fn">setfillstyle</span>(SOLID_FILL, bgHover);
+        <span class="fn">bar</span>(x, y, x <span class="op">+</span> w, y <span class="op">+</span> h);
+        <span class="fn">setbkcolor</span>(bgHover);
+        <span class="fn">setcolor</span>(fgHover);
+    } <span class="kw">else</span> {
+        <span class="fn">setfillstyle</span>(SOLID_FILL, bgNormal);
+        <span class="fn">bar</span>(x, y, x <span class="op">+</span> w, y <span class="op">+</span> h);
+        <span class="fn">setbkcolor</span>(bgNormal);
+        <span class="fn">setcolor</span>(fgNormal);
+    }
+    <span class="fn">outtextxy</span>(textX, textY, (<span class="tp">char</span><span class="op">*</span>)text);
+    <span class="kw">return</span> hovered;
+}</code></pre></div>
+<p><strong>Mengapa mengembalikan <code>hovered</code>?</strong> Nilai kembali memungkinkan pemanggil untuk melakukan aksi tambahan saat item di-hover. Contoh: saat "Turn Off Computer" di-hover DAN diklik, program keluar. Tanpa nilai kembali, pemanggil harus menghitung ulang bounding box.</p>
+
+<h4>6.4 Turn Off Computer &mdash; Klik untuk Keluar</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">if</span> (<span class="fn">drawMenuItem</span>(menuX <span class="op">+</span> <span class="nu">250</span>, footerY <span class="op">+</span> <span class="nu">5</span>, <span class="nu">150</span>, <span class="nu">30</span>,
+    <span class="st">"Turn Off Computer"</span>, mx, my,
+    BLUE, WHITE, LIGHTBLUE, WHITE,
+    menuX <span class="op">+</span> <span class="nu">260</span>, menuY <span class="op">+</span> currentHeight <span class="op">-</span> <span class="nu">30</span>))
+{
+    <span class="kw">if</span> (<span class="fn">ismouseclick</span>(WM_LBUTTONDOWN)) {
+        <span class="fn">clearmouseclick</span>(WM_LBUTTONDOWN);
+        <span class="fn">closegraph</span>();
+        <span class="fn">exit</span>(<span class="nu">0</span>);
+    }
+}</code></pre></div>
+<p><strong>Mengapa <code>clearmouseclick()</code>?</strong> Event klik mouse bersifat <em>queued</em> — jika tidak di-clear, event yang sama bisa diproses lagi di frame berikutnya. <code>clearmouseclick()</code> menghapus event dari antrean setelah diproses.</p>
+
+<h4>6.5 Animasi Pop-Up dengan Shadow</h4>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="cm">// Shadow sederhana (offset 5px)</span>
+<span class="fn">setfillstyle</span>(SOLID_FILL, DARKGRAY);
+<span class="fn">bar</span>(popupX <span class="op">+</span> <span class="nu">5</span>, popupY <span class="op">+</span> popupTargetHeight <span class="op">-</span> popupHeight <span class="op">+</span> <span class="nu">5</span>,
+      popupX <span class="op">+</span> popupWidth <span class="op">+</span> <span class="nu">5</span>, popupY <span class="op">+</span> popupTargetHeight <span class="op">+</span> <span class="nu">5</span>);
+
+<span class="cm">// Background pop-up</span>
+<span class="fn">setfillstyle</span>(SOLID_FILL, WHITE);
+<span class="fn">bar</span>(popupX, popupY <span class="op">+</span> popupTargetHeight <span class="op">-</span> popupHeight,
+      popupX <span class="op">+</span> popupWidth, popupY <span class="op">+</span> popupTargetHeight);
+
+<span class="cm">// Border</span>
+<span class="fn">setcolor</span>(BLUE);
+<span class="fn">rectangle</span>(popupX, popupY <span class="op">+</span> popupTargetHeight <span class="op">-</span> popupHeight,
+            popupX <span class="op">+</span> popupWidth, popupY <span class="op">+</span> popupTargetHeight);
+</code></pre></div>
+<p><strong>Teknik shadow:</strong> Shadow adalah kotak DARKGRAY yang digambar <strong>sebelum</strong> background putih, dengan offset 5px ke kanan-bawah. Background putih menimpa sebagian shadow, menciptakan efek bayangan. Ini adalah teknik shadow murah yang umum di GUI toolkit klasik.</p>
+
+<h3>6. Konsep C++ &amp; WinBGIm</h3>
+<ul>
+<li><strong>Linear Interpolation (LERP)</strong> &mdash; Animasi dengan kecepatan konstan. <code>value += speed * deltaTime</code>. Di sini, deltaTime implisit = 1 frame.</li>
+<li><strong>Clamping</strong> &mdash; Membatasi nilai dalam rentang [min, max] untuk mencegah overflow/underflow.</li>
+<li><strong>Bounding Box Hit Test</strong> &mdash; Mengecek apakah titik (mx, my) berada dalam kotak [x, x+w] x [y, y+h].</li>
+<li><strong>State Tracking</strong> &mdash; Menyimpan state sebelumnya (<code>last*</code>) untuk mendeteksi perubahan antar frame.</li>
+<li><strong>Shadow Technique</strong> &mdash; Menggambar kotak offset sebelum elemen utama untuk ilusi kedalaman.</li>
+<li><strong>Event Clearing</strong> &mdash; <code>clearmouseclick()</code> mencegah event yang sama diproses dua kali.</li>
+</ul>
+
+<h3>7. Saran Perbaikan</h3>
+<ul>
+<li><strong>Easing functions</strong> &mdash; Ganti LERP dengan ease-out (perlambatan di akhir) agar animasi terasa lebih natural. Contoh: <code>t = 1 - (1-t)^2</code> (quadratic ease-out).</li>
+<li><strong>Delta time</strong> &mdash; <code>animSpeed = 0.1f</code> per frame akan menghasilkan kecepatan berbeda di monitor 60Hz vs 144Hz. Gunakan delta time: <code>animProgress += speed * deltaTime</code>.</li>
+<li><strong>Pisahkan ke file sendiri</strong> &mdash; <code>drawMenuItem()</code> adalah helper generik yang bisa dipakai modul lain. Pertimbangkan memindahkannya ke <code>utils.cpp</code>.</li>
+<li><strong>Gunakan array untuk item menu</strong> &mdash; 15+ item menu digambar dengan kode hampir identik. Struktur data dan loop akan sangat mengurangi duplikasi.</li>
+<li><strong>Pisahkan pop-up ke fungsi terpisah</strong> &mdash; <code>drawStartMenu()</code> terlalu panjang (~200 baris). Fungsi <code>drawPopupMenu()</code> akan meningkatkan readability.</li>
+<li><strong>Hindari <code>exit(0)</code> di fungsi library</strong> &mdash; <code>exit()</code> langsung menghentikan program tanpa cleanup. Lebih baik set flag <code>isRunning = false</code> dan biarkan <code>main()</code> yang membersihkan.</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan startmenu.cpp</h4>
+<p>File paling kompleks: menggambar Start Menu dengan animasi buka/tutup, layout dua kolom (kiri putih, kanan biru muda), header, footer, deteksi hover untuk setiap item, tombol "Turn Off Computer", dan pop-up sub-menu "All Programs" dengan shadow. Menggunakan linear interpolation untuk animasi dan bounding box hit test untuk interaksi mouse.</p>
+</div>
+</div>
+
+<!-- ============ TASKBAR.CPP ============ -->
+<div data-nav-id="taskbar" class="card">
+<h2>taskbar.cpp &mdash; Taskbar &amp; Tombol Start</h2>
+
+<h3>1. Tujuan File</h3>
+<p>Menggambar <strong>taskbar</strong> di bagian bawah layar: background abu-abu gelap, tombol Start dengan ikon, shortcut aplikasi (Browser, Folder, Settings), dan jam digital.</p>
+
+<h3>2. Penjelasan #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include &lt;graphics.h&gt;</code></td><td>Fungsi menggambar dan <code>getmaxx()</code>, <code>getmaxy()</code>.</td></tr>
+<tr><td><code>#include "../include/taskbar.h"</code></td><td>Header sendiri.</td></tr>
+<tr><td><code>#include "../include/clock.h"</code></td><td>Fungsi <code>drawClock()</code> yang dipanggil dari taskbar.</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Fungsi <code>drawTaskbar()</code></h3>
+<h4>Tujuan</h4>
+<p>Menggambar taskbar Windows XP-style di 50 piksel terbawah layar.</p>
+
+<h4>Alur Kerja</h4>
+<ol>
+<li><strong>Background taskbar</strong> &mdash; <code>bar()</code> abu-abu gelap memenuhi lebar layar, tinggi 50px dari bawah.</li>
+<li><strong>Tombol Start</strong> &mdash; Kotak abu-abu + ikon <code>start.bmp</code> di kiri (koordinat 10-42).</li>
+<li><strong>Shortcut ikon</strong> &mdash; Tiga ikon kecil: Browser, Folder, Settings, masing-masing ~32px dengan jarak ~40px.</li>
+<li><strong>Jam</strong> &mdash; Memanggil <code>drawClock()</code> yang menggambar di pojok kanan bawah.</li>
+</ol>
+
+<h3>4. Blok Kode Penting</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="tp">int</span> taskbarY <span class="op">=</span> <span class="fn">getmaxy</span>() <span class="op">-</span> <span class="nu">50</span>;  <span class="cm">// Y = 670 (untuk 720)</span>
+
+<span class="cm">// Background taskbar</span>
+<span class="fn">setfillstyle</span>(SOLID_FILL, DARKGRAY);
+<span class="fn">bar</span>(<span class="nu">0</span>, taskbarY, <span class="fn">getmaxx</span>(), <span class="fn">getmaxy</span>());
+
+<span class="cm">// Tombol Start (area kiri)</span>
+<span class="fn">setfillstyle</span>(SOLID_FILL, DARKGRAY);
+<span class="fn">bar</span>(<span class="nu">0</span>, taskbarY, <span class="nu">60</span>, <span class="fn">getmaxy</span>());
+
+<span class="cm">// Ikon Start</span>
+<span class="fn">readimagefile</span>(<span class="st">"assets/start.bmp"</span>,
+                  <span class="nu">10</span>, taskbarY <span class="op">+</span> <span class="nu">8</span>,
+                  <span class="nu">42</span>, taskbarY <span class="op">+</span> <span class="nu">40</span>);
+</code></pre></div>
+<p><strong>Mengapa <code>getmaxy() - 50</code>?</strong> Taskbar selalu 50px dari bawah, terlepas dari resolusi layar. Penggunaan <code>getmaxy()</code> (bukan hardcode 720) membuat kode adaptif terhadap resolusi berbeda.</p>
+
+<h3>5. Konsep WinBGIm</h3>
+<ul>
+<li><strong><code>getmaxx()</code> / <code>getmaxy()</code></strong> &mdash; Mendapatkan dimensi maksimum area gambar. Penting untuk layout responsif.</li>
+<li><strong><code>readimagefile()</code></strong> &mdash; Membaca .bmp dan menggambarnya dengan scaling ke koordinat tujuan.</li>
+</ul>
+
+<h3>6. Saran Perbaikan</h3>
+<ul>
+<li><strong>Array ikon + loop</strong> &mdash; Tiga shortcut digambar dengan pola berulang (hanya X yang berbeda). Gunakan array untuk koordinat.</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan taskbar.cpp</h4>
+<p>Menggambar taskbar 50px di bagian bawah layar: background abu-abu, tombol Start dengan ikon, 3 shortcut aplikasi (Browser, Folder, Settings), dan jam digital. Fungsi tunggal <code>drawTaskbar()</code> dipanggil setiap frame saat redraw diperlukan.</p>
+</div>
+</div>
+
+<!-- ============ CLOCK.CPP ============ -->
+<div data-nav-id="clock" class="card">
+<h2>clock.cpp &mdash; Jam Digital di Taskbar</h2>
+
+<h3>1. Tujuan File</h3>
+<p>Menampilkan <strong>jam digital</strong> (HH:MM) dan <strong>tanggal</strong> (DD/MM/YYYY) di pojok kanan bawah taskbar. Juga menyediakan fungsi <code>isTimeChanged()</code> agar main loop tahu kapan harus me-redraw jam.</p>
+
+<h3>2. Penjelasan #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include &lt;graphics.h&gt;</code></td><td><code>outtextxy()</code>, <code>textwidth()</code>, <code>getmaxx()</code>, <code>getmaxy()</code>.</td></tr>
+<tr><td><code>#include &lt;time.h&gt;</code></td><td><code>time()</code>, <code>localtime()</code>, <code>struct tm</code> untuk mendapatkan waktu sistem.</td></tr>
+<tr><td><code>#include &lt;stdio.h&gt;</code></td><td><code>sprintf()</code> untuk format string waktu &amp; tanggal.</td></tr>
+<tr><td><code>#include "../include/clock.h"</code></td><td>Header sendiri.</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Variabel Global Statis</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">static</span> <span class="tp">int</span> lastDisplayedHour   <span class="op">=</span> <span class="op">-</span><span class="nu">1</span>;  <span class="cm">// Jam terakhir yang ditampilkan</span>
+<span class="kw">static</span> <span class="tp">int</span> lastDisplayedMinute <span class="op">=</span> <span class="op">-</span><span class="nu">1</span>;  <span class="cm">// Menit terakhir yang ditampilkan</span>
+</code></pre></div>
+<p>Nilai awal <code>-1</code> memastikan pendeteksian perubahan pada frame pertama (karena jam aktual tidak pernah -1).</p>
+
+<h3>4. Fungsi <code>isTimeChanged()</code></h3>
+<h4>Tujuan</h4>
+<p>Mengecek apakah waktu sudah berubah sejak pengecekan terakhir. Digunakan oleh main loop untuk menentukan apakah jam perlu di-redraw.</p>
+<h4>Nilai Kembali</h4>
+<p><code>true</code> jika jam atau menit berbeda dari yang terakhir ditampilkan.</p>
+<h4>Alur Kerja</h4>
+<ol>
+<li>Ambil waktu sistem saat ini dengan <code>time(NULL)</code> + <code>localtime()</code>.</li>
+<li>Bandingkan <code>tm_hour</code> dan <code>tm_min</code> dengan <code>lastDisplayedHour</code> dan <code>lastDisplayedMinute</code>.</li>
+<li>Jika berbeda: update nilai terakhir, return <code>true</code>.</li>
+<li>Jika sama: return <code>false</code> (tidak perlu redraw).</li>
+</ol>
+
+<h3>5. Fungsi <code>drawClock()</code></h3>
+<h4>Tujuan</h4>
+<p>Menggambar waktu dan tanggal di pojok kanan bawah taskbar.</p>
+<h4>Alur Kerja</h4>
+<ol>
+<li>Ambil waktu sistem.</li>
+<li>Format string dengan <code>sprintf()</code>: jam "HH:MM", tanggal "DD/MM/YYYY". Perhatikan <code>tm_mon + 1</code> (bulan 0-based) dan <code>tm_year + 1900</code> (tahun sejak 1900).</li>
+<li>Set warna teks putih, background DARKGRAY (samakan dengan taskbar).</li>
+<li>Hitung posisi: <code>getmaxx() - 15</code> sebagai margin kanan.</li>
+<li>Gunakan <code>textwidth()</code> untuk right-align teks (tepi kanan teks = margin kanan layar).</li>
+<li>Jam di baris atas (<code>getmaxy() - 38</code>), tanggal di baris bawah (<code>getmaxy() - 20</code>).</li>
+<li>Restore background color lama setelah selesai (good practice).</li>
+</ol>
+
+<h3>6. Blok Kode Penting</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="tp">char</span> timeBuffer[<span class="nu">10</span>];
+<span class="tp">char</span> dateBuffer[<span class="nu">20</span>];
+
+<span class="fn">sprintf</span>(timeBuffer, <span class="st">"%02d:%02d"</span>, t<span class="op">-&gt;</span>tm_hour, t<span class="op">-&gt;</span>tm_min);
+<span class="fn">sprintf</span>(dateBuffer, <span class="st">"%02d/%02d/%04d"</span>,
+         t<span class="op">-&gt;</span>tm_mday, t<span class="op">-&gt;</span>tm_mon <span class="op">+</span> <span class="nu">1</span>, t<span class="op">-&gt;</span>tm_year <span class="op">+</span> <span class="nu">1900</span>);
+
+<span class="fn">setcolor</span>(WHITE);
+<span class="tp">int</span> oldBk <span class="op">=</span> <span class="fn">getbkcolor</span>();
+<span class="fn">setbkcolor</span>(DARKGRAY);
+
+<span class="tp">int</span> rightMargin <span class="op">=</span> <span class="fn">getmaxx</span>() <span class="op">-</span> <span class="nu">15</span>;
+<span class="fn">outtextxy</span>(rightMargin <span class="op">-</span> <span class="fn">textwidth</span>(timeBuffer),
+            <span class="fn">getmaxy</span>() <span class="op">-</span> <span class="nu">38</span>, timeBuffer);
+<span class="fn">outtextxy</span>(rightMargin <span class="op">-</span> <span class="fn">textwidth</span>(dateBuffer),
+            <span class="fn">getmaxy</span>() <span class="op">-</span> <span class="nu">20</span>, dateBuffer);
+
+<span class="fn">setbkcolor</span>(oldBk);  <span class="cm">// Restore background</span>
+</code></pre></div>
+<p><strong>Mengapa simpan dan restore <code>bkcolor</code>?</strong> <code>setbkcolor()</code> mengubah warna latar teks secara global. Jika tidak di-restore, modul lain yang menggambar teks setelahnya akan terkena dampaknya. Ini adalah <em>defensive programming</em> untuk mencegah bug yang sulit dilacak.</p>
+
+<h3>6. Konsep C++ &amp; WinBGIm</h3>
+<ul>
+<li><strong><code>time_t</code> &amp; <code>struct tm</code></strong> &mdash; Tipe data waktu C. <code>time()</code> mengembalikan timestamp UNIX (detik sejak 1970). <code>localtime()</code> mengkonversinya ke struktur dengan field jam, menit, hari, dll.</li>
+<li><strong><code>sprintf()</code></strong> &mdash; Format string gaya C. <code>%02d</code> = integer 2 digit dengan leading zero. <code>%04d</code> = integer 4 digit.</li>
+<li><strong><code>textwidth()</code></strong> &mdash; Mengembalikan lebar teks dalam piksel. Berguna untuk alignment (right-align, center).</li>
+</ul>
+
+<div class="callout warning">
+<div class="callout-title">&#9888; Perhatikan Offset Waktu C</div>
+<p><code>tm_mon</code> bernilai 0&ndash;11 (Januari = 0), jadi perlu <code>+ 1</code>. <code>tm_year</code> adalah tahun sejak 1900, jadi perlu <code>+ 1900</code>. Lupa offset ini adalah bug yang sangat umum.</p>
+</div>
+
+<h3>7. Saran Perbaikan</h3>
+<ul>
+<li><strong><code>sprintf</code> &rarr; <code>snprintf</code></strong> &mdash; <code>sprintf</code> tidak mengecek batas buffer. <code>snprintf(timeBuffer, sizeof(timeBuffer), ...)</code> mencegah buffer overflow.</li>
+<li><strong>Pisahkan format dari draw</strong> &mdash; Format string bisa dipisah ke fungsi <code>getTimeString()</code> agar bisa di-reuse.</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan clock.cpp</h4>
+<p>Jam digital di pojok kanan taskbar dengan format HH:MM dan DD/MM/YYYY. Fungsi <code>isTimeChanged()</code> memungkinkan main loop hanya me-redraw jam ketika menit benar-benar berubah (optimasi: 1 redraw per menit, bukan 60 per detik).</p>
+</div>
+</div>
+
+<!-- ============ MOUSE.CPP ============ -->
+<div data-nav-id="mouse" class="card">
+<h2>mouse.cpp &mdash; Input Mouse &amp; Keyboard</h2>
+
+<h3>1. Tujuan File</h3>
+<p>Menangani <strong>input mouse</strong> (klik kiri pada tombol Start, item menu, area luar menu) dan <strong>input keyboard</strong> (tombol Windows untuk toggle Start Menu).</p>
+
+<h3>2. Penjelasan #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include &lt;graphics.h&gt;</code></td><td><code>ismouseclick()</code>, <code>getmouseclick()</code>, <code>clearmouseclick()</code>, <code>kbhit()</code>, <code>getch()</code>.</td></tr>
+<tr><td><code>#include &lt;stdlib.h&gt;</code></td><td>Tidak digunakan secara langsung, mungkin sisa dari iterasi sebelumnya.</td></tr>
+<tr><td><code>#include "../include/mouse.h"</code></td><td>Header sendiri.</td></tr>
+<tr><td><code>#include "../include/startmenu.h"</code></td><td><code>toggleStartMenu()</code>.</td></tr>
+<tr><td><code>#include "../include/utils.h"</code></td><td>Variabel <code>startMenuOpen</code> dan <code>isRunning</code>.</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Fungsi <code>handleMouse()</code></h3>
+<h4>Tujuan</h4>
+<p>Memproses satu event klik kiri mouse per frame.</p>
+<h4>Nilai Kembali</h4>
+<p><code>true</code> jika ada aksi yang memerlukan redraw (menu dibuka/ditutup, program keluar).</p>
+<h4>Alur Kerja Langkah Demi Langkah</h4>
+<ol>
+<li><strong>Cek event</strong> &mdash; <code>ismouseclick(WM_LBUTTONDOWN)</code> mengecek apakah ada klik kiri dalam antrean. Jika tidak, return <code>false</code>.</li>
+<li><strong>Ambil koordinat</strong> &mdash; <code>getmouseclick(WM_LBUTTONDOWN, x, y)</code> mengambil posisi klik DAN menghapus event dari antrean.</li>
+<li><strong>Cek tombol Start</strong> &mdash; Jika klik di area (10-80, getmaxy()-40 sampai getmaxy()-10), toggle Start Menu.</li>
+<li><strong>Cek "Turn Off Computer"</strong> &mdash; Jika menu terbuka dan klik di area tombol, set <code>isRunning = false</code>.</li>
+<li><strong>Cek klik luar menu</strong> &mdash; Jika menu terbuka dan klik di luar area menu, tutup menu (<code>startMenuOpen = false</code>).</li>
+</ol>
+
+<div class="callout info">
+<div class="callout-title">&#8505; Kenapa koordinat "Turn Off Computer" di-hardcode?</div>
+<p>Koordinat tombol di <code>mouse.cpp</code> (250-400, menuY+410 s/d menuY+440) di-hardcode, terpisah dari <code>startmenu.cpp</code> yang menggambarnya. Ini adalah <strong>masalah coupling</strong>: jika posisi tombol diubah di <code>startmenu.cpp</code>, <code>mouse.cpp</code> harus di-update manual. Idealnya, koordinat didefinisikan di satu tempat (konstanta) yang di-share.</p>
+</div>
+
+<h3>4. Fungsi <code>handleKeyboard()</code></h3>
+<h4>Tujuan</h4>
+<p>Mendeteksi penekanan tombol Windows (VK_LWIN / VK_RWIN) untuk toggle Start Menu.</p>
+<h4>Nilai Kembali</h4>
+<p><code>true</code> jika tombol Windows ditekan (perlu redraw).</p>
+<h4>Alur Kerja</h4>
+<ol>
+<li><code>kbhit()</code> mengecek apakah ada tombol dalam buffer keyboard.</li>
+<li><code>getch()</code> membaca kode tombol.</li>
+<li>Jika kode == <code>VK_LWIN</code> atau <code>VK_RWIN</code>, toggle Start Menu.</li>
+</ol>
+
+<h3>5. Blok Kode Penting</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">if</span> (<span class="op">!</span><span class="fn">ismouseclick</span>(WM_LBUTTONDOWN))
+    <span class="kw">return</span> <span class="kw">false</span>;  <span class="cm">// Tidak ada event, skip</span>
+
+<span class="tp">int</span> x, y;
+<span class="fn">getmouseclick</span>(WM_LBUTTONDOWN, x, y);  <span class="cm">// Ambil + hapus event</span>
+
+<span class="cm">// Cek bounding box tombol Start</span>
+<span class="kw">if</span> (x <span class="op">&gt;=</span> <span class="nu">10</span> <span class="op">&amp;&amp;</span> x <span class="op">&lt;=</span> <span class="nu">80</span> <span class="op">&amp;&amp;</span>
+    y <span class="op">&gt;=</span> <span class="fn">getmaxy</span>() <span class="op">-</span> <span class="nu">40</span> <span class="op">&amp;&amp;</span>
+    y <span class="op">&lt;=</span> <span class="fn">getmaxy</span>() <span class="op">-</span> <span class="nu">10</span>)
+{
+    <span class="fn">toggleStartMenu</span>();
+    <span class="kw">return</span> <span class="kw">true</span>;
+}
+
+<span class="cm">// Klik luar menu = tutup menu</span>
+<span class="kw">if</span> (startMenuOpen) {
+    <span class="kw">if</span> (x <span class="op">&lt;</span> <span class="nu">0</span> <span class="op">||</span> x <span class="op">&gt;</span> <span class="nu">480</span> <span class="op">||</span> y <span class="op">&lt;</span> menuY <span class="op">||</span> y <span class="op">&gt;</span> startY) {
+        startMenuOpen <span class="op">=</span> <span class="kw">false</span>;
+        <span class="kw">return</span> <span class="kw">true</span>;
+    }
+}
+</code></pre></div>
+
+<h3>6. Saran Perbaikan</h3>
+<ul>
+<li><strong>Gunakan konstanta bernama</strong> &mdash; <code>const int START_BTN_X = 10;</code> dll. Saat ini koordinat hardcode tersebar di multiple file.</li>
+<li><strong>Buat struct untuk bounding box</strong> &mdash; <code>struct Rect { int x, y, w, h; bool contains(int px, int py); };</code> akan membuat hit test lebih bersih.</li>
+<li><strong>Hapus <code>#include &lt;stdlib.h&gt;</code></strong> jika tidak digunakan.</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan mouse.cpp</h4>
+<p>Menangani input: klik tombol Start (toggle menu), klik "Turn Off Computer" (keluar), klik di luar menu (tutup menu), dan tombol Windows keyboard (toggle menu). Event mouse diproses satu per frame. Koordinat bounding box di-hardcode, yang menciptakan coupling dengan startmenu.cpp.</p>
+</div>
+</div>
+
+<!-- ============ UTILS.CPP ============ -->
+<div data-nav-id="utils" class="card">
+<h2>utils.cpp &mdash; State Global &amp; Utilitas</h2>
+
+<h3>1. Tujuan File</h3>
+<p>Menyimpan <strong>variabel state global</strong> yang di-share antar modul, serta fungsi pembantu untuk deteksi perubahan state. File ini adalah "papan pengumuman" program.</p>
+
+<h3>2. Penjelasan #include</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Include</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>#include "../include/utils.h"</code></td><td>Header sendiri (deklarasi extern).</td></tr>
+<tr><td><code>#include &lt;time.h&gt;</code></td><td>Untuk fungsi <code>hasTimeChanged()</code> yang menggunakan <code>time()</code> dan <code>localtime()</code>.</td></tr>
+</tbody>
+</table></div>
+
+<h3>3. Variabel Global (Definisi)</h3>
+<p>Ini adalah <strong>definisi</strong> (bukan hanya deklarasi) dari variabel yang di-<code>extern</code> di <code>utils.h</code>. Tanpa definisi ini, linker akan error (undefined reference).</p>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="tp">bool</span> startMenuOpen <span class="op">=</span> <span class="kw">false</span>;  <span class="cm">// Start Menu terbuka?</span>
+<span class="tp">bool</span> needsRedraw   <span class="op">=</span> <span class="kw">true</span>;   <span class="cm">// Perlu redraw? (awal: ya)</span>
+<span class="tp">bool</span> isRunning     <span class="op">=</span> <span class="kw">true</span>;   <span class="cm">// Program masih berjalan?</span>
+</code></pre></div>
+
+<h3>4. Variabel Global Statis</h3>
+<div class="code-block"><span class="lang-tag">cpp</span><button class="copy-btn">Copy</button><pre><code><span class="kw">static</span> <span class="tp">int</span>   lastHour        <span class="op">=</span> <span class="op">-</span><span class="nu">1</span>;
+<span class="kw">static</span> <span class="tp">int</span>   lastMinute      <span class="op">=</span> <span class="op">-</span><span class="nu">1</span>;
+<span class="kw">static</span> <span class="tp">bool</span>  lastMenuState   <span class="op">=</span> <span class="kw">false</span>;
+<span class="kw">static</span> <span class="tp">float</span> lastAnimProgress <span class="op">=</span> <span class="nu">0.0f</span>;
+</code></pre></div>
+<p>Variabel-variabel ini menyimpan state sebelumnya untuk perbandingan di <code>hasTimeChanged()</code> dan <code>hasMenuStateChanged()</code>.</p>
+
+<h3>5. Fungsi-fungsi</h3>
+<h4><code>hasTimeChanged()</code></h4>
+<p>Sama dengan <code>isTimeChanged()</code> di <code>clock.cpp</code>. Mengecek apakah jam/menit berubah.</p>
+
+<div class="callout warning">
+<div class="callout-title">&#9888; Duplikasi Fungsi</div>
+<p><code>hasTimeChanged()</code> di <code>utils.cpp</code> dan <code>isTimeChanged()</code> di <code>clock.cpp</code> melakukan hal yang <strong>sama persis</strong> tetapi dengan variabel state yang berbeda. Ini adalah duplikasi kode yang tidak perlu. <code>main.cpp</code> menggunakan <code>isTimeChanged()</code> dari <code>clock.h</code>, sementara <code>hasTimeChanged()</code> di <code>utils.cpp</code> mungkin tidak pernah dipanggil (dead code).</p>
+</div>
+
+<h4><code>hasMenuStateChanged()</code></h4>
+<p>Membandingkan <code>startMenuOpen</code> dengan <code>lastMenuState</code>. Return <code>true</code> jika berubah.</p>
+<h4><code>updateLastState()</code></h4>
+<p>Menyimpan state saat ini sebagai state terakhir: <code>lastMenuState = startMenuOpen</code>.</p>
+
+<h3>6. Konsep C++</h3>
+<ul>
+<li><strong><code>extern</code> vs definisi</strong> &mdash; <code>extern</code> di header = "variabel ini ADA di file lain". Definisi di .cpp = "inilah variabelnya". Linker menghubungkan keduanya.</li>
+<li><strong>Global state</strong> &mdash; Pola sederhana untuk berbagi data antar modul. Kelemahan: coupling tinggi, sulit di-test, rawan bug.</li>
+</ul>
+
+<h3>7. Saran Perbaikan</h3>
+<ul>
+<li><strong>Hapus duplikasi</strong> &mdash; Pilih salah satu: <code>hasTimeChanged()</code> atau <code>isTimeChanged()</code>, jangan keduanya.</li>
+<li><strong>Gunakan <code>class</code> atau <code>struct</code> untuk state</strong> &mdash; <code>struct AppState { bool menuOpen; bool running; };</code> lalu oper sebagai parameter. Ini mengurangi coupling global.</li>
+<li><strong>Hapus <code>needsRedraw</code></strong> jika tidak digunakan di kode lain (terlihat hanya di-set tapi tidak pernah di-baca di main.cpp yang punya mekanisme redraw sendiri).</li>
+</ul>
+
+<div class="summary-box">
+<h4>Ringkasan utils.cpp</h4>
+<p>Penyimpan state global program: <code>startMenuOpen</code> (status menu), <code>isRunning</code> (flag game loop), <code>needsRedraw</code> (mungkin tidak terpakai). Juga menyediakan fungsi deteksi perubahan waktu dan state menu (meskipun ada duplikasi dengan clock.cpp).</p>
+</div>
+</div>
+
+<!-- ============ HEADER FILES ============ -->
+<div data-nav-id="headers" class="card">
+<h2>File Header (.h) &mdash; Penjelasan Lengkap</h2>
+<p>Setiap file header menggunakan <strong>include guard</strong> (<code>#ifndef</code> / <code>#define</code> / <code>#endif</code>) untuk mencegah deklarasi ganda.</p>
+
+<h3>Mengapa Include Guard?</h3>
+<p>Bayangkan skenario: <code>main.cpp</code> meng-include <code>desktop.h</code> dan <code>taskbar.h</code>. Ternyata <code>taskbar.h</code> juga meng-include <code>desktop.h</code>. Tanpa include guard, <code>drawDesktop()</code> akan dideklarasikan dua kali — menyebabkan error kompilasi. Include guard memastikan setiap header hanya diproses sekali.</p>
+
+<h3>Header Breakdown</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Header</th><th>Isi</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>desktop.h</code></td><td><code>void drawDesktop();</code></td><td>Satu fungsi, tidak ada dependensi.</td></tr>
+<tr><td><code>taskbar.h</code></td><td><code>void drawTaskbar();</code></td><td>Satu fungsi, tidak ada dependensi.</td></tr>
+<tr><td><code>mouse.h</code></td><td><code>bool handleMouse();<br>bool handleKeyboard();</code></td><td>Dua fungsi input, keduanya return bool (apakah ada aksi).</td></tr>
+<tr><td><code>clock.h</code></td><td><code>void drawClock();<br>bool isTimeChanged();</code></td><td>Satu fungsi draw, satu fungsi deteksi perubahan.</td></tr>
+<tr><td><code>startmenu.h</code></td><td><code>void drawStartMenu();<br>void toggleStartMenu();<br>float getAnimProgress();<br>bool isHoveringProgramsChanged();</code></td><td>Fungsi paling banyak — draw, toggle, query animasi, query hover.</td></tr>
+<tr><td><code>utils.h</code></td><td><code>extern bool startMenuOpen;<br>extern bool needsRedraw;<br>extern bool isRunning;</code></td><td>Deklarasi variabel global (bukan fungsi). <code>extern</code> = "definisi ada di file .cpp".</td></tr>
+</tbody>
+</table></div>
+
+<div class="callout tip">
+<div class="callout-title">&#128161; Tips: Baca Header Dulu</div>
+<p>Saat mempelajari project baru, selalu baca file header terlebih dahulu. Header adalah "daftar isi" modul — mereka menunjukkan fungsi apa saja yang tersedia, parameter apa yang diterima, dan apa yang dikembalikan, tanpa harus membaca detail implementasi.</p>
+</div>
+</div>
+
+<!-- ============ KONSEP C++ & WINBGIM ============ -->
+<div data-nav-id="concepts" class="card">
+<h2>Konsep C++ &amp; WinBGIm yang Digunakan</h2>
+
+<h3>Konsep C++</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Konsep</th><th>Digunakan di</th><th>Penjelasan Singkat</th></tr></thead>
+<tbody>
+<tr><td><strong>Include Guard</strong></td><td>Semua .h</td><td><code>#ifndef</code>/<code>#define</code>/<code>#endif</code> mencegah deklarasi ganda.</td></tr>
+<tr><td><strong>Static Global</strong></td><td>Semua .cpp</td><td>Variabel <code>static</code> di level file = internal linkage = hanya bisa diakses dari file itu.</td></tr>
+<tr><td><strong>Static Local</strong></td><td>main.cpp, startmenu.cpp</td><td>Variabel <code>static</code> dalam fungsi = nilai bertahan antar pemanggilan.</td></tr>
+<tr><td><strong>extern</strong></td><td>utils.h</td><td>Deklarasi variabel yang didefinisikan di file .cpp lain.</td></tr>
+<tr><td><strong>malloc/free</strong></td><td>main.cpp</td><td>Alokasi memori dinamis gaya C untuk buffer gambar.</td></tr>
+<tr><td><strong>Cast (char*)</strong></td><td>desktop.cpp, startmenu.cpp</td><td>Konversi <code>const char*</code> ke <code>char*</code> untuk kompatibilitas dengan API lama.</td></tr>
+</tbody>
+</table></div>
+
+<h3>Konsep WinBGIm</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Fungsi</th><th>Kategori</th><th>Penjelasan</th></tr></thead>
+<tbody>
+<tr><td><code>initwindow(w, h, title)</code></td><td>Window</td><td>Membuat jendela grafis dengan ukuran dan judul tertentu.</td></tr>
+<tr><td><code>closegraph()</code></td><td>Window</td><td>Menutup jendela grafis dan membersihkan resource.</td></tr>
+<tr><td><code>setactivepage(p)</code></td><td>Buffering</td><td>Pilih halaman untuk menggambar (0 atau 1).</td></tr>
+<tr><td><code>setvisualpage(p)</code></td><td>Buffering</td><td>Pilih halaman yang ditampilkan ke layar.</td></tr>
+<tr><td><code>getimage(x,y,w,h, buf)</code></td><td>Image</td><td>Salin area layar ke buffer memori.</td></tr>
+<tr><td><code>putimage(x,y,buf, op)</code></td><td>Image</td><td>Salin buffer memori ke layar (COPY_PUT = timpa).</td></tr>
+<tr><td><code>imagesize(x,y,w,h)</code></td><td>Image</td><td>Hitung ukuran byte yang dibutuhkan buffer.</td></tr>
+<tr><td><code>readimagefile(path,x,y,w,h)</code></td><td>Image</td><td>Baca file .bmp dan gambar langsung ke layar.</td></tr>
+<tr><td><code>bar(x1,y1,x2,y2)</code></td><td>Shape</td><td>Gambar kotak terisi dengan pola dari <code>setfillstyle()</code>.</td></tr>
+<tr><td><code>rectangle(x1,y1,x2,y2)</code></td><td>Shape</td><td>Gambar outline kotak.</td></tr>
+<tr><td><code>line(x1,y1,x2,y2)</code></td><td>Shape</td><td>Gambar garis.</td></tr>
+<tr><td><code>outtextxy(x,y,text)</code></td><td>Text</td><td>Gambar teks di koordinat tertentu.</td></tr>
+<tr><td><code>settextstyle(font,dir,size)</code></td><td>Text</td><td>Atur font (SANS_SERIF_FONT, dll), arah, dan ukuran.</td></tr>
+<tr><td><code>setcolor(c)</code></td><td>Color</td><td>Atur warna menggambar (garis, teks, border).</td></tr>
+<tr><td><code>setfillstyle(p,c)</code></td><td>Color</td><td>Atur pola isian (SOLID_FILL, dll) dan warnanya.</td></tr>
+<tr><td><code>setbkcolor(c)</code></td><td>Color</td><td>Atur warna background teks.</td></tr>
+<tr><td><code>mousex() / mousey()</code></td><td>Input</td><td>Posisi mouse saat ini (tidak memerlukan event).</td></tr>
+<tr><td><code>ismouseclick(btn)</code></td><td>Input</td><td>Cek apakah ada event klik dalam antrean.</td></tr>
+<tr><td><code>getmouseclick(btn,x,y)</code></td><td>Input</td><td>Ambil koordinat klik + hapus dari antrean.</td></tr>
+<tr><td><code>kbhit() / getch()</code></td><td>Input</td><td>Cek/baca input keyboard (non-blocking).</td></tr>
+<tr><td><code>delay(ms)</code></td><td>Util</td><td>Tunda eksekusi selama N milidetik.</td></tr>
+</tbody>
+</table></div>
+</div>
+
+<!-- ============ SARAN PERBAIKAN ============ -->
+<div data-nav-id="improvements" class="card">
+<h2>Saran Perbaikan Keseluruhan</h2>
+
+<h3>1. Arsitektur</h3>
+<ul>
+<li><strong>Kurangi global state</strong> &mdash; Variabel global (<code>startMenuOpen</code>, <code>isRunning</code>) menciptakan coupling tersembunyi. Gunakan <code>struct AppState</code> dan oper sebagai parameter ke setiap modul.</li>
+<li><strong>Pisahkan game loop</strong> &mdash; Pindahkan logika game loop dari <code>main()</code> ke fungsi <code>run()</code> atau kelas <code>Application</code>.</li>
+<li><strong>Gunakan namespace</strong> &mdash; <code>namespace Desktop { void draw(); }</code> akan mengorganisasi kode lebih baik.</li>
+</ul>
+
+<h3>2. Kualitas Kode</h3>
+<ul>
+<li><strong>Hapus duplikasi</strong> &mdash; <code>hasTimeChanged()</code> vs <code>isTimeChanged()</code>, array ikon yang di-hardcode.</li>
+<li><strong>Gunakan konstanta bernama</strong> &mdash; <code>const int MENU_WIDTH = 480;</code> akan membuat kode lebih mudah dibaca dan di-maintain.</li>
+<li><strong>Ganti <code>sprintf</code> dengan <code>snprintf</code></strong> &mdash; Mencegah buffer overflow.</li>
+<li><strong>Ganti <code>malloc</code> dengan <code>new</code> atau <code>std::vector</code></strong> &mdash; Lebih idiomatis C++.</li>
+</ul>
+
+<h3>3. Animasi</h3>
+<ul>
+<li><strong>Delta time</strong> &mdash; Gunakan <code>clock()</code> untuk menghitung waktu antar frame. Ini akan membuat animasi konsisten di semua monitor (60Hz, 144Hz, dll).</li>
+<li><strong>Easing functions</strong> &mdash; Ganti linear interpolation dengan ease-out untuk animasi yang lebih natural.</li>
+</ul>
+
+<h3>4. Input Handling</h3>
+<ul>
+<li><strong>Definisikan bounding box di satu tempat</strong> &mdash; Koordinat tombol Start dll di-hardcode di mouse.cpp DAN startmenu.cpp. Gunakan konstanta atau struct yang di-share.</li>
+<li><strong>Event queue yang lebih baik</strong> &mdash; Saat ini hanya satu klik per frame yang diproses. Jika user mengklik cepat, beberapa klik bisa terlewat.</li>
+</ul>
+
+<div class="callout tip">
+<div class="callout-title">&#128161; Saran untuk Pengembangan Lanjutan</div>
+<p>Jika project ini dikembangkan lebih jauh, pertimbangkan:
+<strong>(1)</strong> Window management (buka/tutup jendela aplikasi),
+<strong>(2)</strong> Icon drag &amp; drop,
+<strong>(3)</strong> Right-click context menu,
+<strong>(4)</strong> Multiple monitor support,
+<strong>(5)</strong> Skin/theming system (ubah warna tema).
+Ini akan menjadi latihan yang sangat baik untuk memahami event-driven GUI programming.</p>
+</div>
+</div>
+
+</main>
+
+<!-- ============ BACK TO TOP BUTTON ============ -->
+<button class="top-btn" id="topBtn" aria-label="Back to top">&#8679;</button>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+/* ============================================================
+   JAVASCRIPT - Sidebar, Copy Buttons, Back to Top, Scroll Spy
+   ============================================================ */
+
+/**
+ * toggleSidebar()
+ * Membuka/menutup sidebar di tampilan mobile.
+ * Dipanggil dari tombol hamburger (&#9776;).
+ */
+function toggleSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+}
+
+/**
+ * closeSidebar()
+ * Menutup sidebar saat overlay diklik (mobile).
+ */
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+}
+
+/**
+ * initCopyButtons()
+ * Menambahkan event listener "Copy" ke setiap tombol copy
+ * pada code blocks. Menggunakan Clipboard API.
+ */
+function initCopyButtons() {
+    document.querySelectorAll('.code-block pre code').forEach(function(block) {
+        var container = block.closest('.code-block');
+        var btn = container.querySelector('.copy-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            var text = block.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(function() {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(function() {
+                /* Fallback untuk browser yang tidak mendukung Clipboard API */
+                btn.textContent = 'Error';
+                setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+            });
+        });
+    });
+}
+
+/**
+ * updateActiveNav()
+ * Scroll spy: menyorot link sidebar yang sesuai dengan section
+ * yang sedang terlihat di viewport.
+ */
+function updateActiveNav() {
+    var sections = document.querySelectorAll('[data-nav-id]');
+    var navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
+    var current = '';
+    sections.forEach(function(sec) {
+        var rect = sec.getBoundingClientRect();
+        /* Jika bagian atas section berada dalam 200px dari atas viewport */
+        if (rect.top < 200) {
+            current = sec.getAttribute('data-nav-id');
+        }
+    });
+    navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('data-target') === current) {
+            link.classList.add('active');
+        }
+    });
+}
+
+/**
+ * initBackToTop()
+ * Menampilkan tombol "back to top" saat user scroll ke bawah,
+ * dan smooth scroll ke atas saat diklik.
+ */
+function initBackToTop() {
+    var btn = document.getElementById('topBtn');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    });
+    btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+/**
+ * initSmoothScroll()
+ * Smooth scroll saat link sidebar diklik.
+ * Juga menutup sidebar di mobile setelah navigasi.
+ */
+function initSmoothScroll() {
+    document.querySelectorAll('.sidebar-nav a[data-target]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var targetId = this.getAttribute('data-target');
+            var target = document.querySelector('[data-nav-id="' + targetId + '"]');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            /* Tutup sidebar di mobile setelah klik */
+            closeSidebar();
+        });
+    });
+}
+
+/**
+ * Inisialisasi semua saat DOM siap.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    initCopyButtons();
+    initBackToTop();
+    initSmoothScroll();
+    window.addEventListener('scroll', updateActiveNav);
+    updateActiveNav(); /* Panggil sekali untuk set state awal */
+});
+</script>
+
+</body>
+</html>
