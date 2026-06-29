@@ -2,43 +2,51 @@
 #include "../include/mouse.h"
 #include "../include/startmenu.h"
 #include "../include/utils.h"
-
+#include <stdlib.h>
 
 bool handleMouse()
 {
-    if(ismouseclick(WM_LBUTTONDOWN))
+    if (!ismouseclick(WM_LBUTTONDOWN))
+        return false;
+
+    int x, y;
+    getmouseclick(WM_LBUTTONDOWN, x, y);
+
+    // Start Button
+    if (x >= 10 && x <= 80 &&
+        y >= getmaxy() - 40 &&
+        y <= getmaxy() - 10)
     {
-        int x, y;
-        getmouseclick(WM_LBUTTONDOWN, x, y);
-        
-        // Cek jika klik pada tombol Start di taskbar
-        if(x >= 10 && x <= 80 && y >= getmaxy() - 40 && y <= getmaxy() - 10)
+        toggleStartMenu();
+        return true;
+    }
+
+    if (startMenuOpen)
+    {
+        int startY = getmaxy() - 50;
+        int menuY = startY - 450;
+
+        // Turn Off Computer
+        if (x >= 250 &&
+            x <= 400 &&
+            y >= menuY + 410 &&
+            y <= menuY + 440)
         {
-            toggleStartMenu();
+            isRunning = false;
             return true;
         }
-        
-        // Jika start menu terbuka, cek apakah klik di luar area menu
-        if(startMenuOpen)
+
+        // Klik luar menu
+        if (x < 0 ||
+            x > 480 ||
+            y < menuY ||
+            y > startY)
         {
-            int startY = getmaxy() - 50;  // Tinggi taskbar
-            int targetHeight = 450;       // Tinggi menu saat fully open
-            int menuY = startY - targetHeight;
-            int menuX = 0;
-            int menuWidth = 480;
-            
-            // Cek apakah klik di luar batas-batas menu
-            bool isClickOutsideMenu = (x < menuX || x > menuX + menuWidth || 
-                                       y < menuY || y > startY);
-            
-            if(isClickOutsideMenu)
-            {
-                // Tutup start menu
-                startMenuOpen = false;
-                return true;
-            }
+            startMenuOpen = false;
+            return true;
         }
     }
+
     return false;
 }
 

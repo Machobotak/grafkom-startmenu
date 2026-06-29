@@ -2,6 +2,7 @@
 #include <math.h>
 #include "../include/startmenu.h"
 #include "../include/utils.h"
+#include <stdlib.h>
 
 static float animProgress = 0.0f;
 static float popupAnimProgress = 0.0f;
@@ -10,7 +11,7 @@ static bool lastHoveringPrograms = false;
 static int lastMouseX = -1;
 static int lastMouseY = -1;
 
-static void drawMenuItem(int x, int y, int w, int h, const char* text, int mx, int my, int bgNormal, int fgNormal, int bgHover, int fgHover, int textX, int textY) {
+static bool drawMenuItem(int x, int y, int w, int h, const char* text, int mx, int my, int bgNormal, int fgNormal, int bgHover, int fgHover, int textX, int textY) {
     bool hovered = (mx >= x && mx <= x + w && my >= y && my <= y + h);
     if (hovered) {
         setfillstyle(SOLID_FILL, bgHover);
@@ -104,8 +105,28 @@ void drawStartMenu()
         // Teks Footer
         int footerY = menuY + currentHeight - footerHeight;
         drawMenuItem(menuX + 30, footerY + 5, 80, 30, "Log Off", mx, my, BLUE, WHITE, LIGHTBLUE, WHITE, menuX + 40, menuY + currentHeight - 30);
-        drawMenuItem(menuX + 250, footerY + 5, 150, 30, "Turn Off Computer", mx, my, BLUE, WHITE, LIGHTBLUE, WHITE, menuX + 260, menuY + currentHeight - 30);
-
+        if (drawMenuItem(
+                menuX + 250,
+                footerY + 5,
+                150,
+                30,
+                "Turn Off Computer",
+                mx,
+                my,
+                BLUE,
+                WHITE,
+                LIGHTBLUE,
+                WHITE,
+                menuX + 260,
+                menuY + currentHeight - 30))
+        {
+            if (ismouseclick(WM_LBUTTONDOWN))
+            {
+                clearmouseclick(WM_LBUTTONDOWN);
+                closegraph();
+                exit(0);
+            }
+        }
         // Menu Kiri
         int leftX = menuX + 5;
         int leftW = leftColWidth - 10;
